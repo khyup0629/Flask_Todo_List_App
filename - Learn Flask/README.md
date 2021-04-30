@@ -83,7 +83,9 @@ if __name__ == '__main__': 은 '파이썬의 인터프리터가 메인 모듈로
 [위로](#Learning-Flask)
 
 ---
-출처 : https://m.blog.naver.com/dsz08082/221798632183
+[출처]
+https://m.blog.naver.com/dsz08082/221798632183
+https://forensickelly.tistory.com/entry/Python-Windows%EC%97%90%EC%84%9C-Flask-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0
 
 ---
 
