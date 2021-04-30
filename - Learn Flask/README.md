@@ -1,3 +1,4 @@
+# Learning Flask
 ---
 # 1. Hello Flask
 
@@ -43,4 +44,39 @@ route() 데코레이터를 사용해서 Flask에게 어떤 URL이 우리가 작�
 
 최종적으로 run() 함수를 사용하여 개발한 어플리케이션을 로컬 서버로 실행한다.
 소스파일을 모듈이 아닌 python 인터프리터를 이용해서 직접 실행한다면,
-if __name__ == '__main__': 은 '파이썬에 인터프리터에 의해 메인 모듈로 실행됐는지'라는 의미이다.
+if __name__ == '__main__': 은 '파이썬의 인터프리터가 메인 모듈로 실행됐는지'라는 의미이다.
+
+### 실행 결과
+
+코드를 실행하면 로컬호스트 루프백 IP인 127.0.0.1의 플라스크 기본 포트 번호인 5000번으로 서버가 실행된다.
+
+![image](https://user-images.githubusercontent.com/43658658/116643887-fda74900-a9ac-11eb-8f4b-aae9f612c5a7.png)
+
+  + Serving Flask app "hello_world" (lazy loading) - 플라스크 앱인 "hello_world"을 옮겨 로딩. (파일 이름 : hello_world.py)
+  + Environment: production - 환경에 대해 명시. 경고 메시지는 개발 서버이니 배포에 사용하지 말 것 당부.
+  + Debug mode: off - 디버그 모드가 활성화 되어있지 않음.
+  + Running on http://127.0.0.1:5000/ (Press CTRL+C to quit) 
+  	+ 해당 주소로 서버가 활성화 되어있음. Ctrl + c 키나 quit를 입력하면 서버가 중단됨.
+  	+ 이후로 서버 로그가 나옴. 로그는 [url] - - [시각] "요청" [HTTP 코드] - 의 형태
+
+![image](https://user-images.githubusercontent.com/43658658/116643903-07c94780-a9ad-11eb-8fa8-c4b949f059b7.png)
+
+127.0.0.1:5000 혹은 localhost:5000으로 url을 입력해 브라우저에 접속하면 지정한 함수 안 내용처럼 Hello World! 문자열이 출력된다. 
+함수에 지정한 문자열은 <h1>태그로 둘려싸여있다. 이는 글씨 크키를 지정하는 HTML 웹 언어의 태그를 가져와 사용한 것이다.
+	
+## 플라스크 어플리케이션
+
+플라스크 어플리케이션을 만들고 실행하는 법은 간단하다. 다음 과정을 통해 플라스크 어플리케이션이 호출된다.
+
+![image](https://user-images.githubusercontent.com/43658658/116644165-a2298b00-a9ad-11eb-9ae1-d82cce6162a8.png)
+
+> 1. 플라스크는 특정 URL이 호출되며 실행된다.
+> 2. 특정 URL이 호출되면 그 URL에 매핑된(대응하는) 함수가 실행된다.
+> 3. 요청한 URL이나(HTTP GET 요청을 통해 가져올 글 요청), 내용(HTTP POST 요청을 통해 내용 요청)을 분석해  비즈니스 로직인 논리를 실행한다. 이때, 상황에 따라 요청의 상태를 유지할 경우 쿠키나 세션을 사용한다. 또한 프로그램의 상태를 기록하기 위해 로깅을 하고 오류가 발생한 경우에 처리할 로직을 별도로 제공할 수도 있다. 
+> 4. 논리가 처리되면 결과를 응답으로 템플릿에 반환한다.
+> 5. 응답으로 전송할 값을 HTML에 표현한다.
+
+[위로](#Learning-Flask)
+
+---
+출처 : https://m.blog.naver.com/dsz08082/221798632183
