@@ -173,6 +173,8 @@ def get_message(message_id):
 
 + 127.0.0.1:5000/message/1 의 경로로 접속하면 1이 정수 형태의 변수로 인식되고 함수 인자로서 함수에 들어가 %d 형식으로 나타나는 것을 확인할 수 있다.
 
+[위로](#Learning-Flask)
+
 ---
 [출처]
 + https://m.blog.naver.com/dsz08082/221798793729
