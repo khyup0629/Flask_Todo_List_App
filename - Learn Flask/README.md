@@ -5,10 +5,15 @@
 + [2. 파이썬 플라스크 라우팅](#2-파이썬-플라스크-라우팅)
 	+ [1) 플라스크 정적 페이지 라우팅](#1-플라스크-정적-페이지-라우팅)
 	+ [2) 플라스크 동적 페이지 라우팅](#2-플라스크-동적-페이지-라우팅)
++ [3. 플라스크 렌더링](#3-플라스크-렌더링)
+	+ [1) HTML](#1-HTML)
+	+ [2) 플라스크에서 HTML 코드 사용하기](#2-플라스크에서-HTML-코드-사용하기)
+	+ [3) 플라스크 HTML 파일 렌더링](#3-플라스크-HTML-파일-렌더링)
 
 ---
 # 1. Hello Flask
 
+### 학습 
 + 플라스크 프레임워크 학습 후 플라스크를 활용해 웹 페이지에 문자열을 출력한다.
 + 웹 페이지에 문자열을 띄우는 학습을 통해 플라스크 동작 방식 또한 살펴본다.
 
@@ -94,6 +99,7 @@ if __name__ == "__main__":
 
 # 2. 파이썬 플라스크 라우팅
 
+### 학습 목표
 + 플라스크는 복잡한 URL를 쉽게 함수로 연결하는 방법을 제공한다.
 + 직접 URL을 지정해 사용하거나 동적으로 변화되게 만들 수 있다.
 + 해당 기능인 route, 라우팅을 살펴본다.
@@ -180,4 +186,159 @@ def get_message(message_id):
 + https://m.blog.naver.com/dsz08082/221798793729
 
 ---
+# 3. 플라스크 렌더링
 
+### 학습 목표
++ 웹은 크게 사용자에게 보여지는 **프론트엔드**와 프론트에서 요청한 내용을 처리하는 **백엔드**단이 있다.
++ 플라스크는 디장고와 달리 마이크로 프레임워크기 때문에 **프론트엔드와 백엔드를 동시에 처리하지 못한다.**
++ 플라스크는 서버의 **백엔드만 담당**하며 사용자에게 보여지는 부분은 **프론트엔드 언어를 사용**해야 한다. 
++ 웹 페이지에서 주로 보여지는 부분인 **HTML 언어**를 알아보고 플라스크에서 활용면을 살펴본다.
+
+## 1) HTML
++ 하이퍼텍스트 마크업 언어(HyperText Markup Language), 구조적 웹 문서를 만들 수 있는 언어로 태그 단위로 제어한다. 
++ 너무 간단하고 태그로만 이뤄진 스크립트라는 등의 이유로 프로그래밍 언어의 범주는 속하지 않지만 웹을 구축하기 위해서는 꼭 알아야 할 언어다.
+
++ HTML 언어로 구조화하여 문자열을 출력하는 법은 다음 코드와 같다.
+```
+<!doctype html>
+<html>
+  <head>
+    <title>Hello HTML</title>
+  </head>
+  <body>
+    <p>Hello World!</p>
+  </body>
+</html>
+```
+### 코드 설명
+
++ 확장자 : html
++ 특징과 문법 : 
+	+ 태그 구조 : 시작 태그와 종료 태그가 한 묶음이며 종료 태그에는 "/"가 붙는다.
+	+ 문서의 시작 : 문서의 시작은 <html>이다. 이는 문서가 html 문서임을 표시하는 것이다.
+	+ 주석 : 일종의 개발자들의 설명줄. 코드에 영향을 주지 않는다. html에서는 <!내용>으로 표기한다.
+	+ 코드 구조 : html은 <head>와 <body> 구조로 나뉜다. 
+		+ <head> : 문서 제목과 같은 보충 정보
+		+ <body> : 실제 브라우저 표시 내용 (웹 문서의 본문)
++ 태그 : (이외에도 다양한 태그가 존재)
+	+ <title> : 브라우저의 윗부분인 제목을 설정
+	+ <h1~6> : 표제. <h1>~<h6>까지 숫자가 커질수록 글씨가 작아진다
+	+ <p> : 단락(문장) 변경
+	+ <br> : 줄 바꿈
+	+ <center> : 가운데 정렬
+
+### 실행 결과
+
++ **앞서 행했던 예제**를 이용해 웹 페이지에 접속해 <h3>F12</h3> 개발자키를 누르면 페이지 소스를 볼 수 있다.
++ 파이썬에서 입력한 문자열이 HTML 코드로 자동 반영되어 들어가 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/116661154-fb55e680-a9ce-11eb-885f-76ed1ac97812.png)
+
+## 2) 플라스크에서 HTML 코드 사용하기
+
++ HTML이 무엇이고 어떻게 사용하는지 알았으니 간단히 기본 태그와 입력, 버튼 태그만 가지고 입력창을 만들어보자.
+``` python
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	html = """\
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="UTF-8"> 
+		<title>HTML for python flask</title>
+	</head>
+	<body>
+	<form>
+		<p>이름 : <input type="text" id="input"></p>
+		<p>이름을 입력하고 제출버튼을 누르세요. <input type="button" value="제출" onclick="alert('제출 완료!')" /></p>
+	</form>
+	</body>
+	"""
+	return html
+
+if __name__ == "__main__":
+	app.run()
+```
+### 코드 설명
+```
+	html = """\
+```
++ html이라는 변수에 html 코드를 넣어줄 것이다. 여러줄에 걸쳐서 입력하기 위해 """\로 시작한다.
+
+```
+		<meta charset="UTF-8">
+```
++ 페이지를 **한국어로 인코딩**한다. 즉, 한국어가 깨지지 않고 제대로 보일 수 있도록 해준다.
+
+```
+		<title>HTML for python flask</title>
+```
++ HTML for python flask로 페이지의 제목을 설정한다.
+
+```
+	<form>
+	
+	</form>
+```
++ <form> 태그 내에는 웹 서버와 웹 프로그램을 통해 처리되어야 하는 데이터들을 담는다.
+
+```
+		<p>이름 : <input type="text" id="input"></p>
+		<p>이름을 입력하고 제출버튼을 누르세요. <input type="button" value="제출" onclick="alert('제출 완료!')" /></p>
+```
++ 문장을 표시할 때는 <p> 태그를 이용한다.
++ <input type="text" id="input">는 문자를 입력할 수 있는 박스 하나를 생성한다.
++ <input type="button" value="제출" onclick="alert('제출 완료!')" />는 제출(value)이라는 이름의 클릭할 수 있는 버튼(button)을 생성하고 이를 클릭할 시(onclick) '제출 완료!'라는 알림(alert)이 뜨도록 한다.
+
+```
+	return html
+```
++ html 코드를 반환한다. 
+
+### 실행 결과
+
++ 파이썬을 실행하면 페이지 제목이 'HTML for python flask'인 페이지가 아래와 같이 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/116664686-c304d700-a9d3-11eb-963d-8068837639a6.png)
+
++ 이름을 입력하고 제출 버튼을 누르면 '제출 완료!'라는 알림이 뜬다.
+
+![image](https://user-images.githubusercontent.com/43658658/116664504-8a64fd80-a9d3-11eb-9b73-f6bc3bb2c5b5.png)
+
+## 3) 플라스크 HTML 파일 렌더링
+
++ 파이썬 코드 내부에서 html 코드작업을 하다보면 다소 불편하고 작성이 어렵다.
++ 플라스크에서 제공하는 렌더링 함수를 이용해 외부에서 작성한 html 파일을 가져와 사용할 수 있어 간편하게 웹 페이지를 조성할 수 있다.
++ 앞서 html 변수에 담았던 html 작성 내용을 파이썬 코드가 위치한 경로에 templates 폴더를 만든 뒤 .html 확장자로 저장한다.
+
+![image](https://user-images.githubusercontent.com/43658658/116665233-7c63ac80-a9d4-11eb-82ee-fc87cefd70c6.png)
+
+![image](https://user-images.githubusercontent.com/43658658/116665548-e11f0700-a9d4-11eb-9f0a-5c61c0796c44.png)
+
++ 각 html 웹 페이지를 별도의 파일로 작성하면 유지보수가 쉬워 용이하다.
++ 이제 작성한 코드의 내용을 render_temlate 함수를 이용해 가져올 것이다.
+
+``` python
+from flask import Flask, render_template  # 랜더링 import
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return render_template('input.html')  # 랜더링 반환
+
+if __name__ == "__main__":
+	app.run()
+```
++ 저장한 input.html 파일을 render_template 함수를 이용해 반환하면 된다.
++ 실행하면 동일한 결과가 나옴을 확인할 수 있다.
+
+[위로](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221800287035
+
+---
