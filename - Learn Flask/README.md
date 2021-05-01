@@ -342,3 +342,168 @@ if __name__ == "__main__":
 + https://m.blog.naver.com/dsz08082/221800287035
 
 ---
+
+# 4. 플라스크 요청과 응답
+
++ 플라스크가 제공하는 기능 중 하나인 요청과 응답을 알아본다.
++ GET 요청과 POST 요청을 살펴본다. 아울러 HTTP 메소드 개념을 학습한다.
+
+## 1) HTTP 메소드
+
++ 어떤 방식으로 웹 어플리케이션 페이지를 개발하더라도 가장 기본적이고 필수적인 처리 과정은 **요청을 받아 적절히 처리하고 그 결과로 응답을 주는 것**이다.
++ 가장 먼저 처리해야 하는 것은 **HTTP 요청으로 넘어온 데이터를 어떻게 받아 처리하는지**다. 이완 관련해 **HTTP 메서드**를 먼저 알아보자.
+
++ 모든 컴퓨터 서비스는 인터넷 통신 규약인 프로토콜의 하나를 사용해 통신한다. 웹 사이트의 **URL**은 그 중 **http와 https 프로토콜**을 사용한다. 
++ 기존 http 프로토콜이 사용되었으며 점차 보안을 위해 보안 기능이 탑재된 **https 프로토콜**을 사용하기 시작한다. 
++ 이는 WWW(world wide web)에서 데이터 통신을 하는데 근간이다. 명시된 URL에 데이터를 탐색하는 메서드가 프로토콜에 정의되어있다.
++ HTTP 메서드는 다음과 같이 존재한다.
+
+![image](https://user-images.githubusercontent.com/43658658/116776355-fc584800-aaa2-11eb-9b7b-b1fce5e8d5e8.png)
+
++ 서버에 요청을 보내 응답을 받기 위해서 GET 혹은 POST 방식으로 요청한다.
+
+## 2) 플라스크 GET 요청
+
++ 플라스크에서 요청에 대한 정보는 **request에 담겨있고** 객체는 안전을 보장한다.
++ 파이썬에 존재하는 requests 모듈이 아니라 **플라스크 프레임워크에 존재하는 request를 불러와 사용한다.**
+
+	from flask import request
+
+> <h3>request 모듈 구성 요소
+
++ HTTP 메서드에 대한 정보를 얻을 수 있는 **method**
++ GET 방식으로 URL에 인자를 'key=value' 형태로 전달했을 때 그 인자를 참조할 수 있는 args, POST, PUT 방식의 HTML 폼 데이터를 얻을 수 있는 **form**
++ 뒤에 있을 POST 방식 역시 request 모듈을 사용하고 따라서 정보는 method와 form으로 구성되어 있음
+
+> <h3>GET 방식
+	
++ **모든 파라미터를 url로 보내 요청하는 방식**이다. 
+
+	http://localhost:5000/?name=user01&juso=평택시
+
++ url에 파라미터로 값을 넣는 방법은 ?를 붙이고 키=값의 쌍 형태로 넣으면 된다. 파라미터를 추가하고자 할 때는 &를 붙인 뒤 동일하게 추가한다.
+
++ 코드로 request의 args를 활용한 GET 방식 요청을 살펴보자.
+``` python
+from flask import Flask
+from flask import request  # request 모듈 임포트
+ 
+app = Flask(__name__)
+ 
+@app.route('/')
+def user_juso():
+ 
+    temp = request.args.get('name', "user01")
+    temp1 = request.args.get('juso', "평택시")
+ 
+    return temp + "-" + temp1
+
+if __name__ == "__main__":
+		app.run()
+```
+
++ 위의 코드를 실행하면 기본적으로 URL에 아무 파라미터도 입력되지 않았을 때 "user01"와 "평택시"가 디폴트값으로 설정된다.
+
+![image](https://user-images.githubusercontent.com/43658658/116776847-ccf70a80-aaa5-11eb-8897-7c3ff602510f.png)
+
++ 하지만 127.0.0.1:5000/?name=user03&juso=서울시 로 입력하게 되면 값이 "user03"와 "서울시"로 바뀌게 되며 아래와 같이 출력된다.
+
+![image](https://user-images.githubusercontent.com/43658658/116776866-e5672500-aaa5-11eb-9d2c-481cbca84911.png)
+
+## 3) 플라스크 POST 요청
+
++ POST 요청은 눈에 파라미터가 보이는 GET 요청과 달리 전달하려는 정보가 **HTTP body에 포함되어 전달**된다.
+	+ GET 요청 : URL에 정보 포함, 작은 양의 데이터를 보낼 때
+	+ POST 요청 : HTTP body에 정보 포함, 데이터 양이 많을 때
++ 전달하려는 정보는 Form Data, Json strings 등이 있다. 이에 따라 사용하는 경우가 다르다.
++ POST 요청은 주로 입력창에서 발생한다. POST 요청 실습은 지난번에 구성했던 HTML 파일을 이용한다.
+```
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>HTML for python flask</title>
+</head>
+
+<body>
+	<form action="/post" method="post">
+		<p>이름 : <input type="text" id="input" name="input"></p>
+		<p>이름을 입력하고 제출버튼을 누르세요. <input type="submit" value="제출" onclick="alert('제출 완료!')" /></p>
+	</form>
+</body>
+</html>
+```
++ 변경한 코드는 버튼을 클릭하면 post 메서드를 통해 /post url로 접근하도록 변경한 것이다. 이때 버튼 타입을 submit으로 변경해 값을 제출하도록 했다.
+	- form에 action을 /post로 지정해 정보가 전달되는 곳이 action에 지정된 /post url로 보내짐.
+	- input 입력 태그에 name을 지정해 정보를 전달받으므로 name 값 지정은 필수불가결.
+	- submit은 form안에서 작성한 내용을 통째로 서버로 보내겠다는 뜻.
+	- value는 버튼에 들어갈 값. 기본값은 "제출"
++ 위의 코드를 templates 폴더에 input.html로 저장하자. 
++ 위 코드는 프론트엔드이며, 플라스크의 기본 서버인 5000번으로 접속했을 때 페이지에 띄울 화면이다.
+``` python
+from flask import Flask, render_template, request
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return render_template('input.html')
+
+@app.route("/post",methods=['POST'])
+def post():
+	value = request.form['input']
+	msg = "%s 님 환영합니다." %value
+	return msg
+
+if __name__ == "__main__":
+	app.run()
+```
+
+[코드 동작 순서]
+
+1. 5000번 URL로 접근 시 작성한 html 파일 호출
+
+![image](https://user-images.githubusercontent.com/43658658/116777940-26613880-aaaa-11eb-909d-a3a4190b31d2.png)
+
+2. 이름을 입력하고 제출을 누르면 submit에 의해 method = 'post', name = 'input'의 형태로 구성된 정보가 127.0.0.1:5000/post 로 보내진다.
+
+3. 127.0.0.1:5000/post 주소로 post 메서드를 통해 요청이 들어오면 'input'의 정보를 넣은 메시지 호출
+
+![image](https://user-images.githubusercontent.com/43658658/116778107-f5353800-aaaa-11eb-9152-02fbdb99faff.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
