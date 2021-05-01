@@ -9,6 +9,11 @@
 	+ [1) HTML](#1-HTML)
 	+ [2) 플라스크에서 HTML 코드 사용하기](#2-플라스크에서-HTML-코드-사용하기)
 	+ [3) 플라스크 HTML 파일 렌더링](#3-플라스크-HTML-파일-렌더링)
++ [4. 플라스크 요청과 응답](#4-플라스크-요청과-응답)
+ 	+ [1) HTTP 메소드](#1-HTTP-메소드)
+ 	+ [2) 플라스크 GET 요청](#2-플라스크-GET-요청)
+ 	+ [3) 플라스크 POST 요청](#3-플라스크-POST-요청)
+ 	+ [4) GET과 POST 능동처리](#4-GET과-POST-능동처리)
 
 ---
 # 1. Hello Flask
@@ -99,7 +104,8 @@ if __name__ == "__main__":
 
 # 2. 파이썬 플라스크 라우팅
 
-### 학습 목표
+> <h3>학습 목표
+
 + 플라스크는 복잡한 URL를 쉽게 함수로 연결하는 방법을 제공한다.
 + 직접 URL을 지정해 사용하거나 동적으로 변화되게 만들 수 있다.
 + 해당 기능인 route, 라우팅을 살펴본다.
@@ -154,7 +160,9 @@ def get_message(message_id):
 if __name__ == "__main__":
 	app.run()
 ```
-### 코드 설명 및 실행 결과
+
+> <h3>코드 설명 및 실행 결과
+
 ``` python
 @app.route('/profile/<username>') #/profile/ 경로에 뒤에 입력한 문자열대로 페이지가 동적 접속.
 def get_profile(username):
@@ -188,7 +196,8 @@ def get_message(message_id):
 ---
 # 3. 플라스크 렌더링
 
-### 학습 목표
+> <h3>학습 목표
+
 + 웹은 크게 사용자에게 보여지는 **프론트엔드**와 프론트에서 요청한 내용을 처리하는 **백엔드**단이 있다.
 + 플라스크는 디장고와 달리 마이크로 프레임워크기 때문에 **프론트엔드와 백엔드를 동시에 처리하지 못한다.**
 + 플라스크는 서버의 **백엔드만 담당**하며 사용자에게 보여지는 부분은 **프론트엔드 언어를 사용**해야 한다. 
@@ -210,7 +219,8 @@ def get_message(message_id):
   </body>
 </html>
 ```
-### 코드 설명
+
+> <h3>코드 설명
 
 + 확장자 : html
 + 특징과 문법 : 
@@ -227,7 +237,7 @@ def get_message(message_id):
 	+ br : 줄 바꿈
 	+ center : 가운데 정렬
 
-### 실행 결과
+> <h3>실행 결과
 
 + **앞서 행했던 예제**를 이용해 웹 페이지에 접속해 **F12** 개발자키를 누르면 페이지 소스를 볼 수 있다.
 + 파이썬에서 입력한 문자열이 HTML 코드로 자동 반영되어 들어가 있다.
@@ -262,7 +272,9 @@ def hello():
 if __name__ == "__main__":
 	app.run()
 ```
-### 코드 설명
+
+> <h3>코드 설명
+
 ```
 	html = """\
 ```
@@ -298,7 +310,7 @@ if __name__ == "__main__":
 ```
 + html 코드를 반환한다. 
 
-### 실행 결과
+> 실행 결과
 
 + 파이썬을 실행하면 페이지 제목이 'HTML for python flask'인 페이지가 아래와 같이 나타난다.
 
@@ -417,6 +429,9 @@ if __name__ == "__main__":
 	+ POST 요청 : HTTP body에 정보 포함, 데이터 양이 많을 때
 + 전달하려는 정보는 Form Data, Json strings 등이 있다. 이에 따라 사용하는 경우가 다르다.
 + POST 요청은 주로 입력창에서 발생한다. POST 요청 실습은 지난번에 구성했던 HTML 파일을 이용한다.
+
+> <h3>input.html
+
 ```
 <!DOCTYPE html>
 <html>
@@ -433,13 +448,17 @@ if __name__ == "__main__":
 </body>
 </html>
 ```
-+ 변경한 코드는 버튼을 클릭하면 post 메서드를 통해 /post url로 접근하도록 변경한 것이다. 이때 버튼 타입을 submit으로 변경해 값을 제출하도록 했다.
++ 변경한 코드는 버튼을 클릭하면 post 요청이 이루어진다.
++ post 메서드를 통해 /post url로 접근하도록 변경했다. 이때 버튼 타입을 submit으로 변경해 값을 제출하도록 했다.
 	- form에 action을 /post로 지정해 정보가 전달되는 곳이 action에 지정된 /post url로 보내짐.
 	- input 입력 태그에 name을 지정해 정보를 전달받으므로 name 값 지정은 필수불가결.
 	- submit은 form안에서 작성한 내용을 통째로 서버로 보내겠다는 뜻.
 	- value는 버튼에 들어갈 값. 기본값은 "제출"
 + 위의 코드를 templates 폴더에 input.html로 저장하자. 
 + 위 코드는 프론트엔드이며, 플라스크의 기본 서버인 5000번으로 접속했을 때 페이지에 띄울 화면이다.
+
+> <h3>서버 코드
+
 ``` python
 from flask import Flask, render_template, request
 app = Flask(__name__)
@@ -458,31 +477,109 @@ if __name__ == "__main__":
 	app.run()
 ```
 
-[코드 동작 순서]
+> <h3>코드 동작 순서
 
 1. 5000번 URL로 접근 시 작성한 html 파일 호출
 
 ![image](https://user-images.githubusercontent.com/43658658/116777940-26613880-aaaa-11eb-909d-a3a4190b31d2.png)
 
-2. 이름을 입력하고 제출을 누르면 submit에 의해 method = 'post', name = 'input'의 형태로 구성된 정보가 127.0.0.1:5000/post 로 보내진다.
+2. 이름을 입력하고 제출을 누르면 submit에 의해 method = 'post', name = 'input'의 형태로 구성된 정보가 127.0.0.1:5000/post 로 보내지며 post 요청 수행
 
 3. 127.0.0.1:5000/post 주소로 post 메서드를 통해 요청이 들어오면 'input'의 정보를 넣은 메시지 호출
 
 ![image](https://user-images.githubusercontent.com/43658658/116778107-f5353800-aaaa-11eb-9152-02fbdb99faff.png)
 
+> <h3>예외처리
 
++ 이름 입력 후 버튼을 누르는 post 요청없이 바로 url에 접속하는 get 요청을 통해 주소에 접속하면 메서드가 허용되지 않았다는 메시지가 나온다.
 
+![image](https://user-images.githubusercontent.com/43658658/116778283-e8651400-aaab-11eb-8f06-0da51bce51ba.png)
 
+## 4) GET과 POST 능동처리
 
++ GET 요청과 POST 요청에 따라 페이지가 다르게 노출되도록 할 수 있다.
 
+> <h3>변경된 서버 코드
 
+``` python
+from flask import Flask, render_template, request
+app = Flask(__name__)
 
+@app.route("/")
+def hello():
+	return "This is the main page"
 
+@app.route("/user",methods=['GET', 'POST'])
+def post():
+	if(request.method =='GET'):
+		return render_template('input.html')
 
+	elif(request.method == 'POST'):
+		value = request.form['input']
+		return render_template('default.html', name=value)
 
+if __name__ == "__main__":
+	app.run()
+```
 
+> <h3>변경된 프론트엔드(input.html) 코드
 
+```
+<form action="" method="post">
+```
 
+> <h3>추가된 프론트엔드(default.html) 코드
+
+```
+<!DOCTYPE default.html>
+{{ name }} 님 환영합니다.
+```
+
+> <h3>코드 분석
+
+``` python
+@app.route("/")
+def hello():
+	return "This is the main page"
+```
++ 기본적으로 코드를 실행하면 "This is the main page" 문자열이 출력되는 페이지가 보여진다.
+
+![image](https://user-images.githubusercontent.com/43658658/116779177-a2aa4a80-aaaf-11eb-9d5e-cce83c890df6.png)
+
+``` python
+@app.route("/user",methods=['GET', 'POST'])
+def post():
+	if(request.method =='GET'):
+		return render_template('input.html')
+```
++ URL에 127.0.0.1:5000/user을 직접 입력해서 들어가면(GET 요청) 'input.html'가 화면에 보여지도록 한다.
+
+![image](https://user-images.githubusercontent.com/43658658/116779184-afc73980-aaaf-11eb-8a0f-d562c9b5d911.png)
+
+``` python
+elif(request.method == 'POST'):
+		value = request.form['input']
+		return render_template('default.html', name=value)
+```
+```
+<form action="" method="post">
+```
+```
+<!DOCTYPE default.html>
+{{ name }} 님 환영합니다.
+```
++ 이름을 입력하고 제출을 누르면 submit에 의해 form 내부에 name='input'이라는 정보가 담겨 POST 메서드(method='post')로 같은 주소(127.0.0.1:5000/user)로 POST 요청하며 보내진다.
++ POST 요청을 받으면 form 내부의 'input'정보를 name이라는 변수에 넣고 default.html을 페이지에 띄운다.
+
+![image](https://user-images.githubusercontent.com/43658658/116779190-c2417300-aaaf-11eb-9854-42619f6d0900.png)
+
+[위로](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221806680590
+
+---
 
 
 
