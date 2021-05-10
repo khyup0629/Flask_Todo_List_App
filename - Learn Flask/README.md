@@ -625,6 +625,85 @@ app.run(host='0.0.0.0', debug=True)
 + https://m.blog.naver.com/dsz08082/221806680590
 
 ---
+# 6. 파이선 플라스크 jinja2 템플릿
+
+> <h3>학습 목표
+
+## 1) 정적 파일과 템플릿
+
+> <h3>코드 파일 구성의 경우
+
++ 일반적인 웹 어플리케이션 : HTML/CSS(프론트엔드) + 자바스크립트, PHP(백엔드)
++ 플라스크 : HTML/CSS(프론트엔드) + 자바스크립트, 파이썬 플라스크(백엔드)
+
+> <h3>뷰 함수에 대한 응답의 경우
+
++ 일반적인 웹 어플리케이션 : HTML/CSS/자바스크립트를 이용해 다양한 방식으로 화면을 표현한다.
++ 플라스크 : 화면 구성에 필요한 정적 파일을 지정하고 웹에서 처리된 데이터를 표현하는 템플릿을 지원한다.
+
+> <h3>정적 파일 위치 지정의 경우
+
++ 일반적인 웹 어플리케이션 : 웹 서버 설정으로 지정한다.
++ 플라스크 : 생성한 패키지 폴더에 포함하거나 모듈 바로 옆 static 폴더를 만들면 /static에서 정적 파일에 접근이 가능하다.
++ url_for()의 첫 인자로 'static', 다음 인자로 filename='정적 파일명'을 통해 사용할 정적 파일 호출 가능.
+
+``` python
+url_for('static', filename='style.css')
+```
+
++ 위 함수의 결과는 아래와 같다.
+
+``` python
+/static/style.css
+```
+
+> <h3>동적 HTML 구성
+
++ 신사2(jinja2) 템플릿 엔진은 CSS, 이미지, 처리 데이터를 화면에 보여주기 위한 동적 HTML을 구성하고 그 과정에서 발생하는 특수문자 처리, 웹 보안 등도 처리한다.
++ HTML 렌더링 과정에서 HTML 템플릿을 이미 간단히 다뤄본 적이 있다.
++ 아래의 예제는 이미 공부했던 input.html을 불러오는 코드이다.
+
+``` python
+from flask import Flask, render_template
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+	return render_template('input.html')
+
+if __name__ == "__main__":
+	app.run()
+```
+
++ 다음 예제는 단순히 불러오는 것 말고 값에 따라 출력이 달라지는 동적 HTML을 구성한다.
+
+> input2.html
+
+``` python
+hello {{ name }}!
+```
+
++ input2.html 파일은 위와 같이 작성되어 있다.
+
+``` python
+from flask import Flask, render_template
+app = Flask(__name__)
+
+@app.route("/")
+@app.route("/<name>")
+def hello(name=None):  # 아무것도 적히지 않으면 디폴트 값인 None 출력
+	return render_template('input2.html', name=name)  # url에 적힌 값이 출력
+
+if __name__ == "__main__":
+	app.run()
+```
++ 아무것도 적히지 않으면 None 출력
+
+![image](https://user-images.githubusercontent.com/43658658/117615055-2a751080-b1a4-11eb-86c4-9e2619c13112.png)
+
++ input2.html 파일의 {{ name }}에 url에 입력한 '/이름'이 들어간다.
+
+![image](https://user-images.githubusercontent.com/43658658/117615082-3234b500-b1a4-11eb-9973-16e590983a98.png)
 
 
 
