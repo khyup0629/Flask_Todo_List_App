@@ -954,7 +954,57 @@ color:blue; font-size:16px;
 
 ![image](https://user-images.githubusercontent.com/43658658/117626153-c6594900-b1b1-11eb-8fed-afe25e62e9a0.png)
 
+#### 외부 스타일 시트
 
++ CSS를 작성하는 가장 기본적인 방법이다.
++ 별도 파일에 CSS를 작성하고 필요로 하는 HTML 문서에서 불러와 사용하는 형식이다.
++ CSS는 동일한 위치에 파일을 배치하거나 url을 통해 다른 서버의 CSS 파일을 참조할 수도 있다.
++ 불러올 때는 link로 가져온다.
+
+``` html
+<link rel="stylesheet" type="text/css" href="test.css"> #내부 작성한 css, 경로 지정.
+<link rel="stylesheet" type="text/css" href="http://... .css"> #다른 서버에 위치한 css
+```
+
++ 내부 스타일 시트의 코드에서 <head></head>부분을 'test.css' 파일로 따로 저장하고, link를 통해 불러온다.
+
+``` html
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" type="text/css" href="test.css">
+
+  <body><center>
+    <h1>Hello World!</h1>
+  </body></center>
+</html>
+```
+
+> test.css
+
+``` html
+body {
+        background-color: gray;
+      }
+
+      h1 {
+        color: blue;
+        margin-left: 40px;
+      }
+```
+
+#### 인라인 스타일
+
++ html 태그에 필요한 디자인 속성을 직접 작성하는 형식이다.
++ 예제는 h1 태그에 스타일 값을 반영한다.
+
+``` html
+<!DOCTYPE html>
+<html>
+  <body><center>
+    <h1 style="color:blue; margin-left:30px;">Hello World!</h1>
+  </body></center>
+</html>
+```
 
 
 
