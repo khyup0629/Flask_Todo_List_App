@@ -784,7 +784,7 @@ if __name__ == "__main__":
 
 + 일반적 구문
 
-``` html
+``` flask
 {% for <개별요소> in <리스트 형태 > %}
   <코드>
 <% endfor %}
