@@ -715,7 +715,9 @@ if __name__ == "__main__":
 
 ## 2) 신사2 템플릿 문법
 
-+ 공식 신사2 문서 페이지 참고 : https://jinja.palletsprojects.com/en/2.11.x/
++ 공식 신사2 문서 페이지 참고
+
+=> https://jinja.palletsprojects.com/en/2.11.x/
 
 > <h3>주석
 
