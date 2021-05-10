@@ -19,6 +19,9 @@
 + [6. 파이선 플라스크 jinja2 템플릿](#6-파이선-플라스크-jinja2-템플릿)
 	+ [1) 정적 파일과 템플릿](#1-정적-파일과-템플릿)
 	+ [2) 신사2 템플릿 문법](#2-신사2-템플릿-문법)
++ [7. 파이썬 플라스크 CSS 사용하기](#7-파이썬-플라스크-CSS-사용하기)
+	+ [1) CSS](#1-CSS)
+	+ [2) 파이썬 플라스크에서 CSS 파일 포함시키는 방법](#2-파이썬-플라스크에서-CSS-파일-포함시키는-방법)
 
 ---
 # 1. Hello Flask
@@ -971,11 +974,12 @@ color:blue; font-size:16px;
 ``` html
 <!DOCTYPE html>
 <html>
-  <link rel="stylesheet" type="text/css" href="test.css">
-
-  <body><center>
-    <h1>Hello World!</h1>
-  </body></center>
+	<head>
+	<link rel="stylesheet" type="text/css" href="test.css">
+	</head>
+	<body><center>
+	<h1>Hello World!</h1>
+	</body></center>
 </html>
 ```
 
@@ -983,13 +987,13 @@ color:blue; font-size:16px;
 
 ``` html
 body {
-        background-color: gray;
-      }
+	background-color: gray;
+}
 
-      h1 {
+h1 {
         color: blue;
         margin-left: 40px;
-      }
+}
 ```
 
 #### 인라인 스타일
@@ -1067,6 +1071,15 @@ if __name__ == "__main__":
 ``` html
 <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
 ```
+
+[위로](#Learning-Flask)
+
+---
+[출처]
++ https://blog.naver.com/dsz08082/221878406932
++ https://m.blog.naver.com/dsz08082/221855358279
+
+---
 
 
 
