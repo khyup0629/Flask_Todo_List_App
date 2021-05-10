@@ -104,7 +104,7 @@ if __name__ == "__main__":
 4. 논리가 처리되면 결과를 응답으로 템플릿에 반환한다.
 5. 응답으로 전송할 값을 HTML에 표현한다.
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -198,7 +198,7 @@ def get_message(message_id):
 
 + 127.0.0.1:5000/message/1 의 경로로 접속하면 1이 정수 형태의 변수로 인식되고 함수 인자로서 함수에 들어가 %d 형식으로 나타나는 것을 확인할 수 있다.
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -358,7 +358,7 @@ if __name__ == "__main__":
 + 저장한 input.html 파일을 render_template 함수를 이용해 반환하면 된다.
 + 실행하면 동일한 결과가 나옴을 확인할 수 있다.
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -586,7 +586,7 @@ elif(request.method == 'POST'):
 
 ![image](https://user-images.githubusercontent.com/43658658/116779190-c2417300-aaaf-11eb-9854-42619f6d0900.png)
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -624,7 +624,7 @@ app.run(host='0.0.0.0', debug=True)
 + 디버그 모드로 플라스크 로컬 개발 서버를 기동하면 콘솔창에 reloader가 다시 시작되었다는 메시지가 추가된다.
 + 또한 **수정 값이 반영**된다.
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -876,7 +876,7 @@ if __name__ == "__main__":
 {{ <매크로 참조 변수> }}
 ```
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
@@ -969,7 +969,7 @@ color:blue; font-size:16px;
 <link rel="stylesheet" type="text/css" href="http://... .css"> #다른 서버에 위치한 css
 ```
 
-+ 내부 스타일 시트의 코드에서 <head></head>부분을 'test.css' 파일로 따로 저장하고, link를 통해 불러온다.
++ 내부 스타일 시트의 코드에서 head부분을 'test.css' 파일로 따로 저장하고, link를 통해 불러온다.
 
 ``` html
 <!DOCTYPE html>
@@ -1072,7 +1072,7 @@ if __name__ == "__main__":
 <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
 ```
 
-[위로](#Learning-Flask)
+[목차](#Learning-Flask)
 
 ---
 [출처]
