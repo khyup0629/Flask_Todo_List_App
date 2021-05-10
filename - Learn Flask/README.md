@@ -722,7 +722,7 @@ if __name__ == "__main__":
 	+ trim_blocks : 템플릿 태그 뒤 첫 개행 문자 자동 제거
 	+ lstrip_blocks : 템플릿 태그가 나오기 전 탭과 공백 문자 제거
 
-```
+``` html
   <ul>
 	<li><a href="https://blog.naver.com/dsz08082">컴퓨터 블로그</a></li>
   </ul>
@@ -732,7 +732,8 @@ if __name__ == "__main__":
 + 시작 태그나 종료 태그에 -를 붙이면 태그 시작과 끝 공백 제거.
 + 위와 같은 +, -를 사용했다면 태그와 기호 사이 공백이 없게 해야 함. (중복 불가)
 + 다음과 같이 - 하면 태그 시작과 끝 공백이 제거됨.
-```
+
+``` html
   <ul>
     {% for user in users -%}
 	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
@@ -746,7 +747,7 @@ if __name__ == "__main__":
 
 + 다음은 신사2 템플릿에서 변수의 값을 출력하는데 사용하는 변수 구분자인 '{'를 이스케이핑한다.
 
-```
+``` html
 {{ '{{' }} //구분자에 따옴표를 붙여 문자열처리
 ```
 
@@ -764,7 +765,7 @@ if __name__ == "__main__":
 + 예제로 가져왔던 다음 반복문에서 users는 리스트 형태의 변수로 user를 객체를 담고 요소를 in 구문을 사용해 가져온다.
 + href 과 caption 속성은 {{...}}를 사용해 출력한다.
 
-``` python
+``` html
   <ul>
     {% for user in users -%}
 	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
@@ -784,7 +785,7 @@ if __name__ == "__main__":
 
 + 일반적 구문
 
-``` python
+``` html
 {% for <개별요소> in <리스트 형태 > %}
   <코드>
 <% endfor %}
