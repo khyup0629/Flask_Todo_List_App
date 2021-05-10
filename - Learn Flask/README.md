@@ -16,6 +16,9 @@
  	+ [4) GET과 POST 능동처리](#4-GET과-POST-능동처리)
 + [5. 로컬 서버 실행](#5-로컬-서버-실행)
 	+ [1) 로컬 서버 실행 설정](#1-로컬-서버-실행-설정)
++ [6. 파이선 플라스크 jinja2 템플릿](#6-파이선-플라스크-jinja2-템플릿)
+	+ [1) 정적 파일과 템플릿](#1-정적-파일과-템플릿)
+	+ [2) 신사2 템플릿 문법](#2-신사2-템플릿-문법)
 
 ---
 # 1. Hello Flask
@@ -629,6 +632,10 @@ app.run(host='0.0.0.0', debug=True)
 
 > <h3>학습 목표
 
++ 정적 파일의 위치 지정과 호출하는 방법에 대해 알아보자.
++ 동적 HTML을 구성하는 방법에 대해 알아보자.
++ 신사2의 대표적인 템플릿 문법들을 알아보자.
+
 ## 1) 정적 파일과 템플릿
 
 > <h3>코드 파일 구성의 경우
@@ -737,7 +744,7 @@ if __name__ == "__main__":
   <ul>
     {% for user in users -%}
 	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
-    {% endfor %}
+    {%- endfor %}
   </ul>
 ```
 
@@ -759,7 +766,7 @@ if __name__ == "__main__":
 {% endraw %}
 ```
 
-> <h3> 반복문
+> <h3>반복문
 
 + 일반적 for 반복 구조와 유사하다.
 + 예제로 가져왔던 다음 반복문에서 users는 리스트 형태의 변수로 user를 객체를 담고 요소를 in 구문을 사용해 가져온다.
@@ -769,7 +776,7 @@ if __name__ == "__main__":
   <ul>
     {% for user in users -%}
 	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
-    {% endfor %}
+    {%- endfor %}
   </ul>
 ```
 
@@ -788,9 +795,83 @@ if __name__ == "__main__":
 ``` html
 {% for <개별요소> in <리스트 형태 > %}
   <코드>
-<% endfor %}
+{% endfor %}
 ```
 
+> <h3>if 조건문
+
++ if 구문으로 변수나 변수 이용 표현이 들어가고 변수의 존재 여부나 변수 값 혹 결과값의 참 거짓 값을 판단해 구성.
+
+``` html
+{% if <조건> %}
+<코드>
+{% elseif <조건> %}
+<코드>
+{% else %}
+<코드>
+{% endif %}
+```
+
++ 인라인으로 다른 구문과 같이도 사용 가능하다.
+
+``` html
+{% <코드> if <조건> else <거짓시 코드> %}
+```
+
+``` html
+{% for user in user if users %}
+<li>{{ user.username }}</li>
+{% endfor %}
+```
+
+> <h3>매크로(macro)
+
++ 매크로 : 반복적 사용 코드로 반복 작업을 줄이고 템플릿 코드 재사용, 일반적으로 다음 형식이다.
++ 파이썬의 함수와 같은 역할
+
+``` html
+{% macro <매크로 이름>(매크로 인자, ...) -%}
+<코드>
+{%- endmacro %}
+```
+
++ 사용 예시를 살펴보자.
+
+``` html
+<p><input type="text" name="username" value=""></p>
+<p><input type="password" name="password" value=""></p>
+```
+
++ 위 HTML 코드를 매크로를 사용하면 다음과 같이 된다.
+
+> input.html
+``` html
+{% macro input(name, value="",type='text') -%}
+<input type="{{ text }}" name="{{ name }}" value="{{{value}}">
+{%- endmacro %}
+```
+
++ 필요한 곳에서 다음처럼 호출한다.
+
+``` html
+{% from 'input.html' import input %}  # 다른 html 파일의 input 매크로를 가져온다.
+<p>{{ input('username') }} </p>
+<p>{{ input('password', type='password') }} </p>
+```
+
+> <h3>import 
+
++ import : **다른 템플릿 파일 내용** 또는 **매크로**를 가져올 때 사용한다.
+	+ 가져오는 템플릿은 캐시된 상태. 가져오는 템플릿에서 가져오는 변수는 사용불가능.
+
++ 다음 두 가지 방법으로 사용한다.
+
+``` html
+{% import "<매크로 정의 템플릿 이름>" as <템플릿 참조 변수>%}
+
+{% from "<매크로 정의 템플릿 이름>" import <매크로 이름> as <템플릿 참조 변수>%}
+{{ <매크로 참조 변수> }}
+```
 
 
 
