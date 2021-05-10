@@ -882,7 +882,7 @@ if __name__ == "__main__":
 ---
 # 7. 파이썬 플라스크 CSS 사용하기
 
-> 학습목표
+> <학습목표
 
 + CSS에 대해 알아보고, 간단한 문법과 HTML에 적용하는 방법에 대해 알아보자.
 + 파이썬 플라스크에서 CSS 파일을 포함시키는 방법에 대해 알아보자.
@@ -1006,8 +1006,67 @@ body {
 </html>
 ```
 
+## 2) 파이썬 플라스크에서 CSS 파일 포함시키는 방법
 
++ 이미 만들어진 CSS 파일을 가져와 사용하면 용이하다.
++ 다음 사이트를 참고하면 CSS 파일을 무료로 다운받을 수 있다.
++ CSS 뿐 아니라 다른 언어도 오픈 라이센스로 코드를 제공한다.
 
+=> https://www.w3schools.com/
+
++ CSS를 사용하기 위해서는 작성한 HTML 파일을 렌더링했던것처럼 파일을 가져와야 한다.
++ 다음은 프로젝트 파일 폴더의 구조이다.
+
+![image](https://user-images.githubusercontent.com/43658658/117628834-834ca500-b1b4-11eb-9441-4bae33b20c19.png)
+
++ 먼저, 파이썬 플라스크 서버 구동 파일(flask_server.py)이 있다.
++ 다음으로 HTML 파일을 담은 템플릿 폴더가 있다.
++ CSS와 자바스크립트, 이미지 같은 정적 파일을 담은 static 폴더가 있다.
+	+ '.css' 확장자는 static 폴더 안에 저장한다.
+	+ CSS 파일이 너무 많다면 static 폴더 내 별도의 CSS 폴더 내에 저장한다.
+
+![image](https://user-images.githubusercontent.com/43658658/117629337-053cce00-b1b5-11eb-97a3-31ee983a6da8.png)
+
++ 위 상황을 기준으로 코드를 구성하자. 
++ 파이썬 서버 코드는 단순히 템플릿(home.html)을 렌더링하는 내용을 담는다.
+
+> flask_server.py
+
+``` python
+from flask import Flask, render_template
+app = Flask(__name__)
+ 
+@app.route("/")
+def home():
+    return render_template('home.html')
+ 
+if __name__ == "__main__":
+    app.run()
+```
+
++ 렌더링할 템플릿(home.html) 내용에 다음과 같이 작성하면 CSS 파일(w3.css)을 포함시킨다.
+
+> home.html
+
+``` html
+<!doctype html>
+<html>
+  <head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+  </head>
+  <body>
+  <p><h2>subject</h2>
+  </p>
+  </body>
+</html>
+```
+
++ static 폴대 내 css 폴더 내에 있는 w3.css 파일을 렌더링한다.
++ href로 나타나는 링크를 {{   }} 로 묶고 안에 url_for로 'static' 폴더에 filename으로 지정한 파일이 있다고 설정한다.
+
+``` html
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+```
 
 
 
