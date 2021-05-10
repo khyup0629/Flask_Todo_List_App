@@ -683,8 +683,6 @@ if __name__ == "__main__":
 hello {{ name }}!
 ```
 
-+ input2.html 파일은 위와 같이 작성되어 있다.
-
 ``` python
 from flask import Flask, render_template
 app = Flask(__name__)
@@ -705,7 +703,92 @@ if __name__ == "__main__":
 
 ![image](https://user-images.githubusercontent.com/43658658/117615082-3234b500-b1a4-11eb-9973-16e590983a98.png)
 
+## 2) 신사2 템플릿 문법
 
++ 공식 신사2 문서 페이지 참고 : https://jinja.palletsprojects.com/en/2.11.x/
+
+> <h3>주석
+
+``` html
+{#
+주석처리할 코드
+#}
+```
+
+> <h3>공백
+
++ 기본적으로 신사2는 줄 끝 개행 문자를 제외한 공백(탭, 공백 문자, 개행 문자)은 제거하지 않는다.
+	+ keep_trailing_newline : 줄 끝 개행 문자 유지
+	+ trim_blocks : 템플릿 태그 뒤 첫 개행 문자 자동 제거
+	+ lstrip_blocks : 템플릿 태그가 나오기 전 탭과 공백 문자 제거
+
+```
+  <ul>
+	<li><a href="https://blog.naver.com/dsz08082">컴퓨터 블로그</a></li>
+  </ul>
+```
+
++ 템플릿 시작 태그에 +를 붙이면 태그 앞 공백을 제거.
++ 시작 태그나 종료 태그에 -를 붙이면 태그 시작과 끝 공백 제거.
++ 위와 같은 +, -를 사용했다면 태그와 기호 사이 공백이 없게 해야 함. (중복 불가)
++ 다음과 같이 - 하면 태그 시작과 끝 공백이 제거됨.
+```
+  <ul>
+    {% for user in users -%}
+	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
+    {% endfor %}
+  </ul>
+```
+
+> <h3>이스케이핑
+
++ 이스케이핑 : 어떤 조건이나 환경에서 특별한 구문이나 의미로 해석되는 문자열의 의미 제거.
+
++ 다음은 신사2 템플릿에서 변수의 값을 출력하는데 사용하는 변수 구분자인 '{'를 이스케이핑한다.
+
+```
+{{ '{{' }} //구분자에 따옴표를 붙여 문자열처리
+```
+
++ 더 큰 범위는 raw 구문을 사용한다.
+
+``` html
+{% raw %}
+    <이스케이핑할 문자열>
+{% endraw %}
+```
+
+> <h3> 반복문
+
++ 일반적 for 반복 구조와 유사하다.
++ 예제로 가져왔던 다음 반복문에서 users는 리스트 형태의 변수로 user를 객체를 담고 요소를 in 구문을 사용해 가져온다.
++ href 과 caption 속성은 {{...}}를 사용해 출력한다.
+
+``` html
+  <ul>
+    {% for user in users -%}
+	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
+    {% endfor %}
+  </ul>
+```
+
++ for 구문 안에는 템플릿 엔진이 제공하는 특별한 변수를 사용할 수 있고 다음 표가 해당 목록이다.
+	+ loop.index : for 구문이 현재 반복한 회수 (1부터)
+	+ loop.index() : for 구문이 현재 반복한 회수 (0부터)
+	+ loop.revindex : for 구문이 역순 반복 회수 (1부터)
+	+ loop.revindex() : for 구문이 역순 반복 회수 (0부터)
+	+ loop.first : 반복이 처음 실행되면 True, 아니면 False
+	+ loop.last : 반복이 마지막이면 True, 아니면 False
+	+ loop.length : 전체 반복 횟수
+	+ loop.cycle : loop.cycle() 함수의 인자로 넘기는 리스트 항목 순서대로 전달
+
++ 일반적 구문
+
+``` html
+{% for <개별요소> in <리스트 형태 > %}
+  <코드>
+<% endfor %}
+```
 
 
 
