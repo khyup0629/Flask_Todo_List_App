@@ -764,7 +764,7 @@ if __name__ == "__main__":
 + 예제로 가져왔던 다음 반복문에서 users는 리스트 형태의 변수로 user를 객체를 담고 요소를 in 구문을 사용해 가져온다.
 + href 과 caption 속성은 {{...}}를 사용해 출력한다.
 
-``` html
+``` python
   <ul>
     {% for user in users -%}
 	<li><a href="{{ user.href }}">{{ user.caption }}</a></li>
@@ -784,7 +784,7 @@ if __name__ == "__main__":
 
 + 일반적 구문
 
-``` flask
+``` python
 {% for <개별요소> in <리스트 형태 > %}
   <코드>
 <% endfor %}
