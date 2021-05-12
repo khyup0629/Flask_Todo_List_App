@@ -1439,6 +1439,18 @@ if __name__ == '__main__':
 
 + p : p사이의 글자 출력
 
+> <h3>파일 제출
+
+![image](https://user-images.githubusercontent.com/43658658/117952554-3b628500-b350-11eb-8af2-3f74486e80ca.png)
+
++ 파일을 선택해 제출한 후 홈페이지의 파일 목록으로 가면 해당 파일이 저장된 것을 확인할 수 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/117952693-5d5c0780-b350-11eb-9cc6-bf60ba773555.png)
+
++ 실제 uploads 폴더 내에도 저장되어 있음을 확인할 수 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/117952850-84b2d480-b350-11eb-8b5f-1e8656236522.png)
+
 [목차](#Learning-Flask)
 
 ---
