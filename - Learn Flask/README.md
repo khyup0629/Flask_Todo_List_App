@@ -1187,10 +1187,8 @@ if __name__ == "__main__":
 
 + 플라스크를 활용해 선택한 파일을 서버에 업로드하는 웹 페이지를 구성해보자.
 
-[자료 출처]
-+ https://github.com/neltia/flask-project/tree/master/01_File_Upload
-
-[9강 자료](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/9%EA%B0%95%20%EC%9E%90%EB%A3%8C)
+[자료]
++ [9강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/9%EA%B0%95%20%EC%9E%90%EB%A3%8C)
 
 ## 1) 정적 파일 구성
 
@@ -1458,6 +1456,7 @@ if __name__ == '__main__':
 ---
 [출처]
 + https://m.blog.naver.com/dsz08082/221859049633
++ https://github.com/neltia/flask-project/tree/master/01_File_Upload
 
 ---
 
