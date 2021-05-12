@@ -25,6 +25,10 @@
 + [8. 렌더링할 HTML 파일에 이미지 삽입](#8-렌더링할-HTML-파일에-이미지-삽입)
 	+ [1) 정적 이미지 삽입](#1-정적-이미지-삽입)
 	+ [2) 동적 이미지 삽입](#2-동적-이미지-삽입)
++ [9. 파이썬 플라스크 파일 업로드 서버 구축](#9-파이썬-플라스크-파일-업로드-서버-구축)
+	+ [1) 정적 파일 구성](#1-정적-파일-구성)
+	+ [2) 백엔드 서버 구현](#2-백엔드-서버-구현)
+	+ [3) 프론트엔드 구현](#3-프론트엔드-구현)
 
 ---
 # 1. Hello Flask
@@ -1205,7 +1209,7 @@ if __name__ == "__main__":
 
 ``` python
 from flask import Flask, render_template, request
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import os
 app = Flask(__name__)
 
@@ -1248,7 +1252,7 @@ if __name__ == '__main__':
 
 ``` python
 from flask import Flask, render_template, request
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import os
 app = Flask(__name__)
 ```
@@ -1256,6 +1260,8 @@ app = Flask(__name__)
 + render_template : html 파일 렌더링을 위해 사용.
 + request : 파일 업로드를 위해 사용.
 + secrue_filename : 업로드할 파일이 실제 시스템에 저장되기 전 이름을 보호하기 위해 사용.
+	+ Werkzeug 모듈 0.16.0 버전에서는 from werkzeug import secure_filename를 통해 secure_filename을 사용할 수 있다.
+	+ Werkzeug 모듈 1.0.0 버전에서는 from werkzeug.utils import secure_filename를 통해 secure_filename을 사용할 수 있다.
 
 ``` python
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -1295,6 +1301,7 @@ def upload_file():
 
 + request.file['file'] : 업로드 페이지에서 POST 방식으로 해당 페이지로 넘어오면 requests 객체의 file 이라는 이름의 폼으로 전송된 파일을 가져온다.
 + f.save('./uploads/' + secure_filename(f.filename)) : secure로 파일 이름을 보호하고 f.save로 파일 객체를 지정한 폴더에 저장한다. 지정한 폴더는 업로드 폴더다.
+	+ secure_filename 으로 보안처리를 하지 않으면 파일을 저장함에 있어 Permission Error가 뜬다.
 + 저장이 완료되면 완료 페이지(check.html)로 렌더링한다. 
 
 ``` python
@@ -1309,6 +1316,9 @@ def list_page():
 
 + file_list = os.listdir("./uploads") : 업로드 폴더에 있는 파일 리스트를 가져온다.
 + html 코드가 간단하기 때문에 백엔드 서버에서 html 코드를 직접 작성해서 반환한다.
++ 작성된 html 코드가 나타내는 페이지는 아래와 같다.
+
+![image](https://user-images.githubusercontent.com/43658658/117947073-d0fb1600-b34a-11eb-9251-73979b39d935.png)
 
 ``` python
 #서버 실행
@@ -1317,6 +1327,7 @@ if __name__ == '__main__':
 ```
 
 + 외부 서비스를 위한 기반을 위해 모든 IP에 대해 8080 포트로 바인딩하고 디버그 모드를 작동시킨다.
++ 만약 위의 코드로 오류가 난다면, host 번호를 127.0.0.1인 로컬 번호로 지정한다.
 
 ## 3) 프론트엔드 구현
 
@@ -1349,6 +1360,13 @@ if __name__ == '__main__':
 </html>
 ```
 
+![image](https://user-images.githubusercontent.com/43658658/117944904-b9bb2900-b348-11eb-819b-b5bca7937c72.png)
+
++ hr : 너비 100%의 선을 생성
++ img src : 이미지를 가져온다.
++ href : 하이퍼링크를 생성. "./upload"로 하면 현재 링크에서 upload가 추가된 URL로 이동한다.
++ br : 한 줄 띄우기
+
 > <h3>upload.html, 업로드 페이지 구성
 
 ``` html
@@ -1379,9 +1397,12 @@ if __name__ == '__main__':
 </html>
 ```
 
-+ 홈 페이지로 돌아가는 하이퍼링크를 만들고, 파일 업로드를 위한 폼을 구성했다. 
-+ 플라스크가 성공적으로 폼에 가져온 파일을 읽어내기 위해서는 entype 속성에 반드시 multipart/form-data 로 지정해야 한다. 
-+ 이는 파이썬 리퀘스트를 이용해 파일을 업로드하는 구성이기 때문이다. 제출을 누르면 /fileUpload 주소로 이동하면서 값을 넘긴다.
+![image](https://user-images.githubusercontent.com/43658658/117945735-93e25400-b349-11eb-822b-392ee50cbdd3.png)
+
++ enctype = "multipart/form-data" : 플라스크가 성공적으로 폼에 가져온 파일을 읽어내기 위해서는 entype 속성에 반드시 multipart/form-data 로 지정해야 한다. 
+	+ 이는 파이썬 리퀘스트를 이용해 파일을 업로드하는 구성이기 때문이다. 제출을 누르면 /fileUpload 주소로 이동하면서 값을 넘긴다.
++ input type = "file" name = "file" : "파일 선택" 버튼과 선택한 파일 이름이 뜨는 공간이 생긴다.
++ input type = "submit" : 제출 버튼이 생긴다.
 
 > <h3>check.html, 확인 페이지 구성
 
@@ -1406,6 +1427,8 @@ if __name__ == '__main__':
   </body>
 </html>
 ```
+
+![image](https://user-images.githubusercontent.com/43658658/117950271-fa697100-b34d-11eb-9da1-00374961824a.png)
 
 + 홈 페이지로 가는 하이퍼링크, 완료를 나타내는 픽토그램 이미지를 가운데 정렬해 간단히 표시했다.
 
