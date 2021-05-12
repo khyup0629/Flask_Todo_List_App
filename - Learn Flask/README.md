@@ -1190,7 +1190,7 @@ if __name__ == "__main__":
 [자료 출처]
 + https://github.com/neltia/flask-project/tree/master/01_File_Upload
 
-[9강 자료]
+[9강 자료](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/9%EA%B0%95%20%EC%9E%90%EB%A3%8C)
 
 ## 1) 정적 파일 구성
 
