@@ -1212,40 +1212,43 @@ from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 import os
 app = Flask(__name__)
+# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #파일 업로드 용량 제한 단위:바이트
 
-#파일 업로드 용량 제한 단위:바이트
-#app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-#HTML 렌더링
+# HTML 렌더링
 @app.route('/')
 def home_page():
 	return render_template('home.html')
 
-#업로드 HTML 렌더링
-@app.route('/upload')
-def upload_page():
-	return render_template('upload.html')
-
-#파일 업로드 처리
-@app.route('/fileUpload', methods = ['GET', 'POST'])
-def upload_file():
-	if request.method == 'POST':
-		f = request.files['file']
-		#저장할 경로 + 파일명
-		f.save('./uploads/' + secure_filename(f.filename))
-		return render_template('check.html')
 
 # 파일 리스트
 @app.route('/list')
 def list_page():
 	file_list = os.listdir("./uploads")
-	html = """<center><a href="/">홈페이지</a><br><br>""" 
+	html = """<center><a href="/">홈페이지</a><br><br>"""
 	html += "file_list: {}".format(file_list) + "</center>"
 	return html
-	
-#서버 실행
+
+
+# 업로드 HTML 렌더링
+@app.route('/upload')
+def upload_page():
+	return render_template('upload.html')
+
+
+# 파일 업로드 처리
+@app.route('/fileUpload', methods=['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['file']
+		# 저장할 경로 + 파일명
+		f.save('./uploads/' + secure_filename(f.filename))
+		return render_template('check.html')
+
+
+# 서버 실행
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=8080, debug = True)
+	app.run(host='127.0.0.1', port=8080, debug=True)
 ```
 
 > <h3>코드 분석
@@ -1340,19 +1343,19 @@ if __name__ == '__main__':
   <head>
     <title>ftp_page</title>
   </head>
-    
+
   <body>
     <center><h1>FTP Server</h1></center>
     <hr width="100%" color="black"/>
 
     <center>
     <form>
-    <img src="{{ url_for('static',filename='images/upload.png') }}", width="50" 
-        style="margin-left: auto; margin-right: auto; display: block;")/>
-    <a href="./upload">파일 업로드</a><br><br><br>
+    <img src="{{ url_for('static',filename='images/upload.png') }}" width="50"
+        style="margin-left: auto; margin-right: auto; display: block;" />
+    <a href="./upload">파일 업로드</a><br><br>
 
-    <img src="{{ url_for('static',filename='images/list.png') }}", width="50" 
-        style="margin-left: auto; margin-right: auto; display: block;")/>
+    <img src="{{ url_for('static',filename='images/list.png') }}" width="50"
+        style="margin-left: auto; margin-right: auto; display: block;" />
     <a href="./list">파일 목록</a><br><br><br>
     </form>
     </center>
@@ -1362,10 +1365,11 @@ if __name__ == '__main__':
 
 ![image](https://user-images.githubusercontent.com/43658658/117944904-b9bb2900-b348-11eb-819b-b5bca7937c72.png)
 
-+ hr : 너비 100%의 선을 생성
-+ img src : 이미지를 가져온다.
++ meta charset="UTF-8" : 페이지에 한글이 보이도록 하는 명령어.
++ hr : 너비 100%의 선을 생성.
++ img src : 이미지를 가져온다. width는 파일의 크기를 설정.
 + href : 하이퍼링크를 생성. "./upload"로 하면 현재 링크에서 upload가 추가된 URL로 이동한다.
-+ br : 한 줄 띄우기
++ br : 한 줄 띄우기.
 
 > <h3>upload.html, 업로드 페이지 구성
 
@@ -1379,13 +1383,13 @@ if __name__ == '__main__':
 
   <body>
     <center><h1>Upload Page</h1></center>
-    <center><a href="/">홈페이지</a><br><center>
+    <center><a href="/">홈페이지</a><br></center>
     <hr width="100%" color="black"/>
     <center><h3>Upload File!</h3></center>
     <hr width="100%" color="black"/>
 
-    <img src="{{ url_for('static',filename='images/upload.png') }}", width="100" 
-        style="margin-left: auto; margin-right: auto; display: block;")/>
+    <img src="{{ url_for('static',filename='images/upload.png') }}" width="100"
+        style="margin-left: auto; margin-right: auto; display: block;" />
 
     <br><br><center>
     <form action = "http://localhost:8080/fileUpload" method = "POST"
@@ -1399,8 +1403,10 @@ if __name__ == '__main__':
 
 ![image](https://user-images.githubusercontent.com/43658658/117945735-93e25400-b349-11eb-822b-392ee50cbdd3.png)
 
++ form action = "http://localhost:8080/fileUpload" method = "POST" : POST 메서드 방식으로 해당 주소에 input을 보낸다.
 + enctype = "multipart/form-data" : 플라스크가 성공적으로 폼에 가져온 파일을 읽어내기 위해서는 entype 속성에 반드시 multipart/form-data 로 지정해야 한다. 
-	+ 이는 파이썬 리퀘스트를 이용해 파일을 업로드하는 구성이기 때문이다. 제출을 누르면 /fileUpload 주소로 이동하면서 값을 넘긴다.
+	+ 이는 파이썬 request를 이용해 파일을 업로드하는 구성이기 때문이다. 
+	+ 제출을 누르면 /fileUpload 주소로 이동하면서 값을 넘긴다.
 + input type = "file" name = "file" : "파일 선택" 버튼과 선택한 파일 이름이 뜨는 공간이 생긴다.
 + input type = "submit" : 제출 버튼이 생긴다.
 
@@ -1416,21 +1422,22 @@ if __name__ == '__main__':
 
   <body>
     <center><h1>Upload Page</h1></center>
-    <center><a href="/">홈페이지</a><br><br><br>
+    <center><a href="/">홈페이지</a><br><br><br></center>
     <center>
-    <img src="{{ url_for('static',filename='images/tick.png') }}", width="100" 
-      style="margin-left: auto; margin-right: auto; display: block;")/>
-
+    <img src="{{ url_for('static',filename='images/checked.png') }}" width="100"
+      style="margin-left: auto; margin-right: auto; display: block;" />
+    </center>
+      
     <center>
     <p>파일 업로드 성공!<p>
-    </form></center>
+    </center>
   </body>
 </html>
 ```
 
 ![image](https://user-images.githubusercontent.com/43658658/117950271-fa697100-b34d-11eb-9da1-00374961824a.png)
 
-+ 홈 페이지로 가는 하이퍼링크, 완료를 나타내는 픽토그램 이미지를 가운데 정렬해 간단히 표시했다.
++ p : p사이의 글자 출력
 
 [목차](#Learning-Flask)
 
