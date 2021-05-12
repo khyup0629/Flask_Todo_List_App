@@ -887,7 +887,7 @@ if __name__ == "__main__":
 ---
 # 7. 파이썬 플라스크 CSS 사용하기
 
-> <학습목표
+> <h3>학습목표
 
 + CSS에 대해 알아보고, 간단한 문법과 HTML에 적용하는 방법에 대해 알아보자.
 + 파이썬 플라스크에서 CSS 파일을 포함시키는 방법에 대해 알아보자.
@@ -1082,6 +1082,53 @@ if __name__ == "__main__":
 + https://m.blog.naver.com/dsz08082/221855358279
 
 ---
+
+# 8. 렌더링할 HTML 파일에 이미지 삽입
+
+> <h3>학습목표
+
++ 정적 이미지 삽입과 동적 이미지 삽입을 알아보자.
+
+## 1) 정적 이미지 삽입
+
++ 정적(static)인 이미지를 파일로 넣어 렌더링할 HTML 파일에서 불러오는 방법은 CSS 파일을 넣고 불러오는 방법과 동일하다. 
++ 다음과 같이 파일 구조를 만들어 static의 images 폴더에서 사진을 가져올 수 있도록 만든다.
+
+![image](https://user-images.githubusercontent.com/43658658/117934212-67283f80-b33d-11eb-987e-944978fd968d.png)
+
+> <h3>flask_server.py
+
++ 백엔드(파이썬 서버)는 단순히 템플릿(home.html)을 렌더링한다.
+
+``` python
+from flask import Flask, render_template
+app = Flask(__name__)
+ 
+@app.route("/")
+def home():
+    return render_template('home.html')
+ 
+if __name__ == "__main__":
+    app.run()
+```
+
+> <h3>home.html
+ 
++ 아래와 같이 작성하면 템플릿을 불러올 때 지정한 이미지만을 가져온다.
++ url_for을 이용하며, static 폴더 내 image 폴더 내에 있는 어떤 파일을 가져온다.
+
+``` html
+<html>
+  <head>
+  </head>
+  <body>
+    <img src="{{ url_for('static', filename='image/파일이름.이미지 파일 확장자') }}">
+  </div>
+  </body>
+</html>
+```
+
+
 
 
 
