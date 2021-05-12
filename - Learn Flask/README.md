@@ -1134,9 +1134,10 @@ if __name__ == "__main__":
 ## 2) 동적 이미지 삽입
 
 + 이미지가 계속 바뀌어야 한다면 파라미터로 이미지 파일의 이름을 넘겨오는 방식을 사용해야 한다.
-+ render_template 함수로 HTML 파일에 파라미터를 넘기고 Jinja2 템플릿 문법을 사용해 파라미터를 인식한다.
 
 > <h3>flask_server.py
+
++ render_template 함수로 HTML 파일에 파라미터를 넘기고 Jinja2 템플릿 문법을 사용해 파라미터를 인식한다.
 
 ``` python
 from flask import Flask, render_template
@@ -1149,12 +1150,12 @@ def home():
 if __name__ == "__main__":
     app.run()
  ```
- 
+
+> <h3>home.html
+
 + 다음과 같이 작성하면 들어온 인자 값에 따라 다른 이미지를 띄운다. 
 + 신사2 템플릿 문법의 if 문을 넣어 파라미터로 인식시킬 수 있다. 
 + 문법 자체는 다음 파일에서 단독적인 의미를 가지지 않지만 파이썬 코드에서 전달한 파라미터를 인식하는데 목적이 있다.
-
-> <h3>home.html
 
 ``` html
 <html>
