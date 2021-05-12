@@ -1190,6 +1190,8 @@ if __name__ == "__main__":
 [자료 출처]
 + https://github.com/neltia/flask-project/tree/master/01_File_Upload
 
+[9강 자료]
+
 ## 1) 정적 파일 구성
 
 + 먼저 다음과 같이 전체 프로젝트 폴더를 구성한다.
