@@ -1177,7 +1177,143 @@ if __name__ == "__main__":
 
 ---
 
+# 9. 파이썬 플라스크 파일 업로드 서버 구축
 
+> <h3>학습 목표
 
++ 플라스크를 활용해 선택한 파일을 서버에 업로드하는 웹 페이지를 구성해보자.
 
+[자료 출처]
++ https://github.com/neltia/flask-project/tree/master/01_File_Upload
 
+## 1) 정적 파일 구성
+
++ 먼저 다음과 같이 전체 프로젝트 폴더를 구성한다.
+
+![image](https://user-images.githubusercontent.com/43658658/117937942-790be180-b341-11eb-977d-5c305eaf3495.png)
+
++ static내에 images 폴더를 만들고 사이트에 사용할 이미지를 담는다.
++ 픽토그램 사이트에서 무료 이미지를 다운 받을 수 있다.
+
+=> https://www.flaticon.com/
+
+![image](https://user-images.githubusercontent.com/43658658/117938008-8aed8480-b341-11eb-82e0-b36c86785cbe.png)
+
+## 2) 백엔드 서버 구현
+
+> <h3>flask_server.py
+
+``` python
+from flask import Flask, render_template, request
+from werkzeug import secure_filename
+import os
+app = Flask(__name__)
+
+#파일 업로드 용량 제한 단위:바이트
+#app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+
+#HTML 렌더링
+@app.route('/')
+def home_page():
+	return render_template('home.html')
+
+#업로드 HTML 렌더링
+@app.route('/upload')
+def upload_page():
+	return render_template('upload.html')
+
+#파일 업로드 처리
+@app.route('/fileUpload', methods = ['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['file']
+		#저장할 경로 + 파일명
+		f.save('./uploads/' + secure_filename(f.filename))
+		return render_template('check.html')
+
+# 파일 리스트
+@app.route('/list')
+def list_page():
+	file_list = os.listdir("./uploads")
+	html = """<center><a href="/">홈페이지</a><br><br>""" 
+	html += "file_list: {}".format(file_list) + "</center>"
+	return html
+	
+#서버 실행
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=8080, debug = True)
+```
+
+> <h3>코드 분석
+
+``` python
+from flask import Flask, render_template, request
+from werkzeug import secure_filename
+import os
+app = Flask(__name__)
+```
++ Flask : 플라스크 서버 실행을 위해 사용.
++ render_template : html 파일 렌더링을 위해 사용.
++ request : 파일 업로드를 위해 사용.
++ secrue_filename : 업로드할 파일이 실제 시스템에 저장되기 전 이름을 보호하기 위해 사용.
+
+``` python
+# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+```
+
++ 주석 처리한 다음 문장을 실행하면 파일 업로드 용량 제한을 줄 수 있다. 필요에 따라 사용하면 된다. 
++ 파일 업로드 용량 제한 단위는 바이트임에 유의하자. 즉, 다음 예제코드는 16MB 용량을 최대 제한으로 둔다.
+
+``` python
+#HTML 렌더링
+@app.route('/')
+def home_page():
+	return render_template('home.html')
+```
+
++ 홈페이지 파일(home.html)을 렌더링한다. 홈페이지가 나타난다.
+
+``` python
+#업로드 HTML 렌더링
+@app.route('/upload')
+def upload_page():
+	return render_template('upload.html')
+```
+
++ 업로드 파일(upload.html)을 렌더링한다. 업로드 페이지가 나타난다.
+
+``` python
+#파일 업로드 처리
+@app.route('/fileUpload', methods = ['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['file']
+		#저장할 경로 + 파일명
+		f.save('./uploads/' + secure_filename(f.filename))
+		return render_template('check.html')
+```
+
++ request.file['file'] : 업로드 페이지에서 POST 방식으로 해당 페이지로 넘어오면 requests 객체의 file 이라는 이름의 폼으로 전송된 파일을 가져온다.
++ f.save('./uploads/' + secure_filename(f.filename)) : secure로 파일 이름을 보호하고 f.save로 파일 객체를 지정한 폴더에 저장한다. 지정한 폴더는 업로드 폴더다.
++ 저장이 완료되면 완료 페이지(check.html)로 렌더링한다. 
+
+``` python
+# 파일 리스트
+@app.route('/list')
+def list_page():
+	file_list = os.listdir("./uploads")
+	html = """<center><a href="/">홈페이지</a><br><br>""" 
+	html += "file_list: {}".format(file_list) + "</center>"
+	return html
+```
+
++ file_list = os.listdir("./uploads") : 업로드 폴더에 있는 파일 리스트를 가져온다.
++ html 코드가 간단하기 때문에 백엔드 서버에서 html 코드를 직접 작성해서 반환한다.
+
+``` python
+#서버 실행
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=8080, debug = True)
+```
+
++ 외부 서비스를 위한 기반을 위해 모든 IP에 대해 8080 포트로 바인딩하고 디버그 모드를 작동시킨다.
