@@ -1317,3 +1317,95 @@ if __name__ == '__main__':
 ```
 
 + 외부 서비스를 위한 기반을 위해 모든 IP에 대해 8080 포트로 바인딩하고 디버그 모드를 작동시킨다.
+
+## 3) 프론트엔드 구현
+
+> <h3>home.html, 홈페이지 구성
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>ftp_page</title>
+  </head>
+    
+  <body>
+    <center><h1>FTP Server</h1></center>
+    <hr width="100%" color="black"/>
+
+    <center>
+    <form>
+    <img src="{{ url_for('static',filename='images/upload.png') }}", width="50" 
+        style="margin-left: auto; margin-right: auto; display: block;")/>
+    <a href="./upload">파일 업로드</a><br><br><br>
+
+    <img src="{{ url_for('static',filename='images/list.png') }}", width="50" 
+        style="margin-left: auto; margin-right: auto; display: block;")/>
+    <a href="./list">파일 목록</a><br><br><br>
+    </form>
+    </center>
+  </body>
+</html>
+```
+
+> <h3>upload.html, 업로드 페이지 구성
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>pyftp</title>
+  </head>
+
+  <body>
+    <center><h1>Upload Page</h1></center>
+    <center><a href="/">홈페이지</a><br><center>
+    <hr width="100%" color="black"/>
+    <center><h3>Upload File!</h3></center>
+    <hr width="100%" color="black"/>
+
+    <img src="{{ url_for('static',filename='images/upload.png') }}", width="100" 
+        style="margin-left: auto; margin-right: auto; display: block;")/>
+
+    <br><br><center>
+    <form action = "http://localhost:8080/fileUpload" method = "POST"
+         enctype = "multipart/form-data">
+    <input type = "file" name = "file" />
+    <input type = "submit"/>
+    </form></center>
+  </body>
+</html>
+```
+
++ 홈 페이지로 돌아가는 하이퍼링크를 만들고, 파일 업로드를 위한 폼을 구성했다. 
++ 플라스크가 성공적으로 폼에 가져온 파일을 읽어내기 위해서는 entype 속성에 반드시 multipart/form-data 로 지정해야 한다. 
++ 이는 파이썬 리퀘스트를 이용해 파일을 업로드하는 구성이기 때문이다. 제출을 누르면 /fileUpload 주소로 이동하면서 값을 넘긴다.
+
+> <h3>check.html, 확인 페이지 구성
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>pyftp</title>
+  </head>
+
+  <body>
+    <center><h1>Upload Page</h1></center>
+    <center><a href="/">홈페이지</a><br><br><br>
+    <center>
+    <img src="{{ url_for('static',filename='images/tick.png') }}", width="100" 
+      style="margin-left: auto; margin-right: auto; display: block;")/>
+
+    <center>
+    <p>파일 업로드 성공!<p>
+    </form></center>
+  </body>
+</html>
+```
+
++ 홈 페이지로 가는 하이퍼링크, 완료를 나타내는 픽토그램 이미지를 가운데 정렬해 간단히 표시했다.
+
