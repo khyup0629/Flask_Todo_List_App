@@ -1459,5 +1459,24 @@ if __name__ == '__main__':
 + https://github.com/neltia/flask-project/tree/master/01_File_Upload
 
 ---
+# 10. FTP 서버 구축
 
+> <h3>학습 목표
+
++ 9강에 이어 파일 다운로드 기능을 추가해보자.
+
+## 1) 정적 파일 구성
+
++ 먼저 다음과 같이 전체 프로젝트 폴더를 구성한다.
+
+![image](https://user-images.githubusercontent.com/43658658/117937942-790be180-b341-11eb-977d-5c305eaf3495.png)
+
++ static내에 images 폴더를 만들고 사이트에 사용할 이미지를 담는다.
++ 픽토그램 사이트에서 무료 이미지를 다운 받을 수 있다.
+
+=> https://www.flaticon.com/
+
+
+
+ 
 
