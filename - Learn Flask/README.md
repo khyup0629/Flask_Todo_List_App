@@ -1470,7 +1470,7 @@ if __name__ == '__main__':
 + 9강에 이어 파일 다운로드 기능을 추가해보자.
 
 [자료]
-+ [10강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/9%EA%B0%95%20%EC%9E%90%EB%A3%8C)
++ [10강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/10%EA%B0%95%20%EC%9E%90%EB%A3%8C)
 
 ## 1) 정적 파일 구성(10강)
 
