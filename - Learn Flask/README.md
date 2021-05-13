@@ -29,6 +29,10 @@
 	+ [1) 정적 파일 구성](#1-정적-파일-구성)
 	+ [2) 백엔드 서버 구현](#2-백엔드-서버-구현)
 	+ [3) 프론트엔드 구현](#3-프론트엔드-구현)
++ [10. FTP 서버 구축](#10-FTP-서버-구축)
+	+ [1) 정적 파일 구성](#1-정적-파일-구성)
+	+ [2) 백엔드 서버 구현](#2-백엔드-서버-구현)
+	+ [3) 프론트엔드 구현](#3-프론트엔드-구현)
 
 ---
 # 1. Hello Flask
@@ -1475,6 +1479,236 @@ if __name__ == '__main__':
 + 픽토그램 사이트에서 무료 이미지를 다운 받을 수 있다.
 
 => https://www.flaticon.com/
+
+![image](https://user-images.githubusercontent.com/43658658/118080304-e9276f80-b3f4-11eb-9efd-ced30a2d79f7.png)
+
+## 2) 백엔드 서버 구현
+
+> <h3>flask_server.py
+
+``` python
+from flask import Flask, render_template, request, send_file
+from werkzeug.utils import secure_filename
+import os
+app = Flask(__name__)
+# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #파일 업로드 용량 제한 단위:바이트
+
+
+# HTML 렌더링
+@app.route('/')
+def home_page():
+	return render_template('home.html')
+
+
+# 업로드 HTML 렌더링
+@app.route('/upload')
+def upload_page():
+	return render_template('upload.html')
+
+
+# 파일 업로드 처리
+@app.route('/fileUpload', methods=['GET', 'POST'])
+def upload_file():
+	if request.method == 'POST':
+		f = request.files['file']
+		# 저장할 경로 + 파일명
+		f.save('./uploads/' + secure_filename(f.filename))
+		return render_template('check.html')
+
+
+# 다운로드 HTML 렌더링
+@app.route('/downfile')
+def down_page():
+	files = os.listdir("./uploads")
+	return render_template('filedown.html',files=files)
+
+
+# 파일 다운로드 처리
+@app.route('/fileDown', methods = ['GET', 'POST'])
+def down_file():
+	if request.method == 'POST':
+		sw=0
+		files = os.listdir("./uploads")
+		for x in files:
+			if(x==request.form['file']):
+				sw=1
+
+		path = "./uploads/"
+		return send_file(path + request.form['file'],
+				attachment_filename = request.form['file'],
+				as_attachment=True)
+
+
+# 서버 실행
+if __name__ == '__main__':
+	app.run(host='127.0.0.1', port=8080, debug=True)
+```
+
+> <h3>코드 분석
+
++ 삭제된 부분 : 파일 리스트 코드
++ 추가된 부분 : 다운로드 관련 코드
+
+``` python
+# 다운로드 HTML 렌더링
+@app.route('/downfile')
+def down_page():
+	files = os.listdir("./uploads")
+	return render_template('filedown.html',files=files)
+```
+
++ uploads에 있는 파일 목록들을 이용해 다운로드 페이지(filedown.html)을 렌더링한다.
+
+``` python
+# 파일 다운로드 처리
+@app.route('/fileDown', methods = ['GET', 'POST'])
+def down_file():
+	if request.method == 'POST':
+		sw=0
+		files = os.listdir("./uploads")
+		for x in files:
+			if(x==request.form['file']):
+				sw=1
+
+		path = "./uploads/"
+		return send_file(path + request.form['file'],
+				attachment_filename = request.form['file'],
+				as_attachment=True)
+```
+
++ uploads 폴더 내에 request된 파일이 있는지 확인한다.
++ send_file 함수는 지정한 경로에 있는 파일을 다운로드 받을 수 있도록 해준다.
+	+ send_file(다운 받을 파일, 다운 받아지는 파일의 이름 설정)
+
+## 3) 프론트엔드 구현
+
+> <h3>home.html
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>ftp_page</title>
+  </head>
+
+  <body>
+    <center><h1>FTP Server</h1></center>
+    <hr width="100%" color="black"/>
+
+    <center>
+    <form>
+    <img src="{{ url_for('static',filename='images/upload.png') }}" width="50"
+        style="margin-left: auto; margin-right: auto; display: block;" />
+    <a href="./upload">파일 업로드</a><br><br>
+
+    <img src="{{ url_for('static',filename='images/download.png') }}" width="50"
+        style="margin-left: auto; margin-right: auto; display: block;" />
+    <a href="./downfile">파일 다운로드</a><br><br><br>
+    </form>
+    </center>
+  </body>
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118084468-bdf44e80-b3fb-11eb-82d5-3106014ead05.png)
+
++ 변경된 부분 : 하이퍼링크를 "./downfile"로 가게해서 다운로드 페이지(filedown.html)이 열리도록 한다.
+	+ 그림을 download.png를 가져오도록 한다.
+
+> <h3>filedown.html
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>pyftp</title>
+  </head>
+
+  <body>
+    <center><h1>Download Page</h1></center>
+    <center><a href="/">홈페이지</a><br></center>
+    <hr width="100%" color="black"/>
+    <center><h3>Download File!</h3></center>
+    <hr width="100%" color="black"/>
+
+    <img src="{{ url_for('static',filename='images/download.png') }}" width="70" 
+        style="margin-left: auto; margin-right: auto; display: block;" /><br><br>
+
+    <center>
+    <form action = "http://localhost:8080/fileDown" method = "POST"
+         enctype = "multipart/form-data">
+    <input type = "text" name = "file" />
+    <input type = "submit"/>
+    </form></center><br><br><br>
+
+    <hr width="100%" color="black"/>
+    <center><h3>File List</h3></center>
+    <hr width="100%" color="black"/>
+
+    <img src="{{ url_for('static',filename='images/list.png') }}" width="50" 
+    style="margin-left: auto; margin-right: auto; display: block;" /><br>
+
+    <ul>
+         {% for n in files %}
+         <li>{{n}}</li>
+         {% endfor %}
+    </ul>
+  </body>
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118084773-3824d300-b3fc-11eb-8c23-23b8a9c43c52.png)
+
+``` html
+	<form action = "http://localhost:8080/fileDown" method = "POST"
+		 enctype = "multipart/form-data">
+	<input type = "text" name = "file" />
+	<input type = "submit"/>
+```
+
++ POST 메서드 형식으로 text 형식, 이름이 'file'인 input을 /fileDown URL로 보내지도록 한다.
++ 서버 코드에서 request.form('file')을 다운로드(send_file)할 수 있다.
+
+``` html
+     <ul>
+	{% for n in files %}
+	<li>{{n}}</li>
+	{% endfor %}
+     </ul>
+```
+
++ 서버 코드에서 uploads 폴더 내에 있는 파일 리스트와 함께 filedown.이 렌더링되는데 이때의 파일 리스트가 들어갈 자리가 {{n}}이다.
++ 즉, 페이지 아래에 uploads 폴더 내의 파일 리스트를 보여준다.
++ ul : 파일 리스트를 .(점) 리스트로 정리해서 보여준다.
+
+> <h3>check.html, upload.html
+
++ check.html과 upload.html은 9강과 코드가 동일하다.
+
+> <h3>동작 확인
+
++ 홈페이지에서 '파일 업로드'로 들어간다.
++ 바탕화면에 있는 'shield.png' 파일을 선택한 후 제출한다.
+
+![image](https://user-images.githubusercontent.com/43658658/118084998-96ea4c80-b3fc-11eb-9fcd-a5b9e501a0f0.png)
+
++ 홈페이지로 돌아간 후 '파일 다운로드'로 들어간다.
++ 아래쪽 'File List'에 방금 업로드한 'shield.png' 파일이 확인된다.
++ 'shield.png'를 입력하고 '제출'을 누르면 파일이 정상적으로 다운로드 되는 것을 확인할 수 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/118085175-e6c91380-b3fc-11eb-8b53-a9b3fba7c597.png)
+
+[목차](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221868934940
++ https://github.com/neltia/flask-project/tree/master/02_File_Control
+
+---
+
 
 
 
