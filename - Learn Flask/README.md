@@ -1469,6 +1469,9 @@ if __name__ == '__main__':
 
 + 9강에 이어 파일 다운로드 기능을 추가해보자.
 
+[자료]
++ [10강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/9%EA%B0%95%20%EC%9E%90%EB%A3%8C)
+
 ## 1) 정적 파일 구성(10강)
 
 + 먼저 다음과 같이 전체 프로젝트 폴더를 구성한다.
@@ -1564,12 +1567,6 @@ def down_page():
 @app.route('/fileDown', methods = ['GET', 'POST'])
 def down_file():
 	if request.method == 'POST':
-		sw=0
-		files = os.listdir("./uploads")
-		for x in files:
-			if(x==request.form['file']):
-				sw=1
-
 		path = "./uploads/"
 		return send_file(path + request.form['file'],
 				attachment_filename = request.form['file'],
@@ -1681,7 +1678,10 @@ def down_file():
 
 + 서버 코드에서 uploads 폴더 내에 있는 파일 리스트와 함께 filedown.이 렌더링되는데 이때의 파일 리스트가 들어갈 자리가 {{n}}이다.
 + 즉, 페이지 아래에 uploads 폴더 내의 파일 리스트를 보여준다.
-+ ul : 파일 리스트를 .(점) 리스트로 정리해서 보여준다.
++ ul : 파일 리스트를 ●(bulleted) 리스트로 정리해서 보여준다. <li>와 같이 활용한다.
+	+ ol : ordered list의 약자로 숫자(1, 2, 3)나 알파벳(a, b, c), 로마자(I, II, III, IV) 등의 순서가 있는 목록을 나타낸다.
+	+ ul : unordered list의 약자로 순서가 없는 목록(●)을 나타낸다.
+	+ dl : definition list의 약자로 사전처럼 용어를 설명하는 목록을 나타낸다.
 
 > <h3>check.html, upload.html
 
