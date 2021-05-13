@@ -33,6 +33,9 @@
 	+ [1) 정적 파일 구성](#1-정적-파일-구성10강)
 	+ [2) 백엔드 서버 구현](#2-백엔드-서버-구현10강)
 	+ [3) 프론트엔드 구현](#3-프론트엔드-구현10강)
++ [11. 파이썬 플라스크 에러와 로깅](#11-파이썬-플라스크-에러와-로깅)
+	+ [1) 에러 처리](#1-에러-처리)
+	+ [2) 로깅](#2-로깅)
 
 ---
 # 1. Hello Flask
@@ -1708,9 +1711,112 @@ def down_file():
 + https://github.com/neltia/flask-project/tree/master/02_File_Control
 
 ---
+# 11. 파이썬 플라스크 에러와 로깅
+
+> <h3>학습 목표
+
++ 페이지 에러에 관한 사용자 지정 페이지를 만들어보자.
++ 로그를 남기는 방법에 대해 알아보자.
+
+## 1) 에러 처리
+
++ 플라스크는 HTTP 오류 코드에 대해 사용자 지정으로 처리하는 방식을 제공한다. 
++ HTTP 통신 응답 상태 코드(주요 상태 코드)
+	+ 200 : 서버가 요청을 제대로 처리했다는 뜻.
+	+ 403 : 서버는 요청은 이해했는데 권한이 없음.
+	+ 404 : 서버가 요청한 페이지를 찾을 수 없음.
+	+ 500 : 서버는 요청을 처리하는 과정에서 잘못된 요청을 보호하기 위해 기대하지 않은 조건 응답을 보여줌 요청 처리 과정에서 잘못된 요청을 보호하기 위해 기대함.
+	+ 502 : 서버의 잘못된 게이트 웨이로 인한 에러.
+	+ 503 : 서비스를 사용할 수 없음.
+
++ errorhandler 데코레이터를 사용하면 HTTP 오류 코드에 해당하는 페이지를 정의한다.
++ 다음과 같이 데코레이터를 설정하면 단순한 에러코드 화면이 아닌 사용자가 별도로 지정한 화면으로 처리한다.
+
+``` python
+@app.errorhandler(404)
+def page_not_found(error):
+     return render_template('page_not_found.html'), 404
+```
+
++ 코드를 살펴보면 반환값이 두 개다. 뒤에 넘기는 인자 값인 404는 요청에 대한 응답값으로 404를 넘겨주지 않으면 없는 페이지에 대한 요청을 성공(200)으로 처리한다. 
++ 이처럼 errorhandler를 사용할 때는 뒤에 상응하는 에러코드를 적어야만 한다.
+
+> <h3>flask_server.py
+
++ 앞서 실습했던 10강의 서버 코드에 없는 페이지의 에러에 대한 렌더링을 추가해보자.
++ 아래의 코드를 10강의 서버 코드에 추가한다.
+
+``` python
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404
+```
+
+> <h3>page_not_found.html
+
++ 없는 페이지에 대한 에러(404)가 발생할 때 나타나는 페이지를 구성한다.
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>pyftp</title>
+  </head>
+
+  <body>
+    <center><h1>Not Found Page</h1></center>
+    <center><a href="/">홈페이지</a><br><center>
+    <hr width="100%" color="black"/>
+    <center><h3>404</h3></center>
+    <hr width="100%" color="black"/>
+  </body>
+</html>
+```
+
+> <h3>동작 확인
+
++ 없는 페이지에 대한 URL을 입력하면 아래와 같이 page_not_found.html페이지 화면이 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/118089674-94d7bc00-b403-11eb-97b5-ac63469b4b50.png)
+
+## 2) 로깅
+
++ 로깅은 로그를 남기는 작업이다. 어떠한 오류나 혹은 특정한 요청 등이 발생하면 이에 대한 로그를 남기고자 할 때 로깅을 사용한다. 
++ 애플케이션 객체가 생성된 상태에서 logger 인스턴스에 접근해 로깅한다. 
++ 다음은 로깅 예시다.
+
+``` python
+	app.logger.debug('A value for debugging') # 디버깅 메시지 로깅
+	app.logger.warning('A warning ocurred (%d apples)', 42) # 경고 메시지 남기기
+	app.logger.error('An error ocurred') # 에러 메시지 남기기
+```
+
++ 로깅을 활용하면 디버그 기능 활성화 없이도 특정 상황에 처한 경우를 디버깅할 수 있고 로그 메시지를 직접 정해 출력한다는 점에서 디버그가 용이하다.
++ errorhandler에 logger 기능을 추가하면 아래와 같다.
+
+``` python
+@app.errorhandler(404)
+def page_not_found(error):
+     app.logger.error(error)
+     return render_template('page_not_found.html'), 404
+```
+
++ 없는 페이지로 이동하면 파이썬 개발환경의 터미널에 아래와 같이 에러가 발생한 시각과 어떤 에러가 발생했는지에 대한 데이터가 기록된다.
+
+![image](https://user-images.githubusercontent.com/43658658/118090679-ce5cf700-b404-11eb-8c52-e3c17b590786.png)
+
+[목차](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221871535831
+
+---
 
 
 
 
- 
+
+
 
