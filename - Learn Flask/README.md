@@ -41,7 +41,7 @@
 	+ [2) 회원가입 및 로그인 폼 만들기](#2-회원가입-및-로그인-폼-만들기)
 	+ [3) 데이터베이스 설정](#3-데이터베이스-설정)
 	+ [4) 세션 설정](#4-세션-설정)
-	+ [5) 블로그 페이지 오픈 설정](5-블로그-페이지-오픈-설정)
+	+ [5) 블로그 페이지 오픈 설정](#5-블로그-페이지-오픈-설정)
 	+ [6) 서버 구현](#6-서버-구현)
 
 ---
@@ -2246,7 +2246,7 @@ def home():
 	+ 홈페이지 링크를 눌러서 들어올 경우(GET) 그냥 홈페이지(index.html)를 띄운다.
 
 ![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
-![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
+![image](https://user-images.githubusercontent.com/43658658/118230964-5b698400-b4c9-11eb-9136-e38ad3a582f4.png)
 
 ``` python
 @app.route('/login', methods=['GET', 'POST'])
