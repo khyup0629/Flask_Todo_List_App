@@ -1827,6 +1827,10 @@ def page_not_found(error):
 + 플라스크 웹 프레임워크의 로그인 및 세션 처리를 알아보고 데이터베이스를 연결해 사용자 정보를 관리해보자.
 + 간단히 회원가입 및 로그인을 할 수 있는 폼을 만들고 데이터베이스로 로그인 기능을 만들어보자.
 + 로그인 여부에 따라 세션을 구현해 로그인을 해야만 서비스를 이용할 수 있게 해보자.
++ 회원 정보가 있을 경우 네이버 아이디를 입력받아 네이버 블로그를 열 수 있도록 해보자.
+
+[자료]
++ [12강 자료 바로가기]
 
 ## 1) 라이브러리 설치 및 파일 구성
 
@@ -1847,7 +1851,7 @@ pip install flask-sqlalchemy
 ![image](https://user-images.githubusercontent.com/43658658/118219746-1176a300-b4b5-11eb-9918-58b5d2382bec.png)
 
 + static 폴더 내 images 폴더를 만들고 안에 네이버 아이콘 이미지를 넣는다.
-+ 
+
 ![image](https://user-images.githubusercontent.com/43658658/118219872-539fe480-b4b5-11eb-8c41-28ca17ae511d.png)
 
 ## 2) 회원가입 및 로그인 폼 만들기
@@ -2101,6 +2105,8 @@ def home():
 </html>
 ```
 
+![image](https://user-images.githubusercontent.com/43658658/118230289-6243c700-b4c8-11eb-9b01-e7f3e949b5ea.png)
+
 ## 5) 블로그 페이지 오픈 설정
 
 > <h3> service.py
@@ -2117,6 +2123,8 @@ def blogopen(url):
 	blog = link % (url)
 	webbrowser.open(blog)
 ```
+
+![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
 
 ## 6) 서버 구현
 
@@ -2236,6 +2244,10 @@ def home():
 	+ 로그인 페이지(login.html)에서 '로그인' 버튼을 눌러 홈페이지로 올 경우(POST) username을 통해 blogopen 함수를 보내면서 홈페이지(index.html)를 연다.
 	+ 홈페이지 링크를 눌러서 들어올 경우(GET) 그냥 홈페이지(index.html)를 띄운다.
 
+![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
+
+![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
+
 ``` python
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -2262,6 +2274,10 @@ def login():
 + 필터링한 정보가 존재하지 않는 경우, "Dont Login"이라는 문구가 뜨도록 한다.
 + 마찬가지로 로그인을 함에 있어 정상적인 로그인 외 예외적인 경우가 발생하면 "Dont Login" 문구가 뜨도록 한다.
 
+![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
+
+![image](https://user-images.githubusercontent.com/43658658/118231271-dd59ad00-b4c9-11eb-984d-d6d5126d045a.png)
+
 ``` python
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -2281,6 +2297,8 @@ def register():
  회원에 대한 정보(username, password, email)을 Class 형태로 데이터베이스에 저장하고   
  로그인 페이지('login.html')를 띄운다.
 
+![image](https://user-images.githubusercontent.com/43658658/118230390-90290b80-b4c8-11eb-9cfa-68851d80cb35.png)
+
 ``` python
 @app.route("/logout")
 def logout():
@@ -2290,6 +2308,41 @@ def logout():
 ```
 
 + '로그아웃' 링크를 누르면 로그인 세션을 False로 바꾸고 홈페이지(index.html)로 간다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
+
+> <h3>동작 확인
+
++ 제일 처음 접속하면 로그인이 되어 있지 않으므로 아래와 같이 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
+
++ Register 버튼을 누른다.
++ 정보를 입력하고 '회원가입' 버튼을 누른다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230390-90290b80-b4c8-11eb-9cfa-68851d80cb35.png)
+
++ 정보가 데이터베이스에 저장된 후 로그인 페이지가 나타난다.
++ 회원 가입 했을 때의 username과 비밀번호를 이용해 로그인한다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
+
++ 블로그 아이디를 입력하는 페이지가 나온다.
++ 네이버 아이디를 입력하고 'Open'을 누르면 자신의 네이버 블로그를 연다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230964-5b698400-b4c9-11eb-9136-e38ad3a582f4.png)
+
++ 'Log out'을 누르면 홈페이지로 돌아가면서 로그 아웃 된다.
+
+![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
+
++ 데이터베이스에 없는 정보로 로그인하려 하면 'Dont Login' 문구가 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/118231271-dd59ad00-b4c9-11eb-984d-d6d5126d045a.png)
+
++ 마찬가지로 아이디만 입력하고 비밀번호를 입력하지 않은 채로 로그인을 시도하면 'Dont Login' 문구가 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/118231363-fb271200-b4c9-11eb-8720-67462f326ad3.png)
 
 [목차](#Learning-Flask)
 
