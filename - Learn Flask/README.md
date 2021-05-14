@@ -2125,7 +2125,7 @@ def blogopen(url):
 	webbrowser.open(blog)
 ```
 
-![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
+![image](https://user-images.githubusercontent.com/43658658/118230964-5b698400-b4c9-11eb-9136-e38ad3a582f4.png)
 
 ## 6) 서버 구현
 
