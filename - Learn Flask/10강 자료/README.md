@@ -1,1 +1,0 @@
-# 10강 이론 [바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask#10-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%ED%94%8C%EB%9D%BC%EC%8A%A4%ED%81%AC-%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EC%84%9C%EB%B2%84-%EA%B5%AC%EC%B6%95)
