@@ -1813,6 +1813,239 @@ def page_not_found(error):
 + https://m.blog.naver.com/dsz08082/221871535831
 
 ---
+# 12. 로그인과 세션, SQLite DB
+
+> <h3>학습 목표
+
++ 플라스크 웹 프레임워크의 로그인 및 세션 처리를 알아보고 데이터베이스를 연결해 사용자 정보를 관리해보자.
++ 간단히 회원가입 및 로그인을 할 수 있는 폼을 만들고 데이터베이스로 로그인 기능을 만들어보자.
++ 로그인 여부에 따라 세션을 구현해 로그인을 해야만 서비스를 이용할 수 있게 해보자.
+
+## 1) 라이브러리 설치 및 파일 구성
+
+> <h3>라이브러리 설치
+
++ 로그인을 위한 데이터베이스 사용 및 소스코드를 실행하기 위해 다음 라이브러리를 설치한다.
++ 해당 라이브러리는 MySQL, MariaDB 등 MySQL 계열의 관계형 데이터베이스를 별도 사용하기 위해 설치한다.
++ 파이썬 IDE 터미널에 다음의 명령어를 입력한다.
+
+```
+pip install flask-sqlalchemy
+```
+
+> <h3>파일 구성
+
++ 다음과 같이 폴더와 파일을 구성한다.
+
+![image](https://user-images.githubusercontent.com/43658658/118219746-1176a300-b4b5-11eb-9918-58b5d2382bec.png)
+
++ static 폴더 내 images 폴더를 만들고 안에 네이버 아이콘 이미지를 넣는다.
++ 
+![image](https://user-images.githubusercontent.com/43658658/118219872-539fe480-b4b5-11eb-8c41-28ca17ae511d.png)
+
+## 2) 회원가입 및 로그인 폼 만들기
+
+> <h3>base.html
+
++ base.html은 모든 페이지의 베이스 코드다. 
++ 다른 페이지에서 이 페이지를 포함시키면 해당 페이지 내용 전 아래 페이지를 포함시켜 중복요소를 최소화시킨다. 
++ 브라우저 제목, 브라우저 내 제목, 홈 페이지의 하이퍼링크를 담는다.
++ 이 코드를 다른 html 문서에서 참조하게 되면 그 html가 보여주는 페이지 위에 항상 base.html이 구현한 이미지가 나타난다.
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+	<title>flask Service</title>
+  </head>
+  <body><center><div>
+  	<h1>Service Page</h1>
+  	<hr width="100%" color="black"/>
+  	<center>
+  		<img src="{{ url_for('static',filename='images/naver.png')}}"/>
+  		<h3>Naver Blogpage Open</h3>
+  	</center>
+  	<hr width="100%" color="black"/>
+  	<a href="/">홈페이지</a>
+	</div></center>
+	<hr>
+	{% block content %}{% endblock %}
+  </body>
+</html>
+```
+
+> <h3>register.html
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		<p>또 가입하시게요?</p>
+	{% else %}
+	<center><div>
+		<h2>Register</h2>
+		<form action="/register/" method="POST">
+		<input type="username" name="username" placeholder="Username"><br>
+		<input type="password" name="password" placeholder="Password"><br>
+		<input type="email" name="email" placeholder="email@naver.com">
+		<br><br>
+		<input type="submit" value="회원가입">
+		</form>
+	</div></center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
++ 회원가입 페이지이다.
++ extends "base.html" : base.html을 참조해 위에 base.html의 구현된 이미지가 뜨게 한다.
++ if session['logged_in'] : 이미 로그인이 되어 있다면 '또 가입하시게요?'라는 문구가 뜨도록 한다.
+
+``` html
+<center><div>
+	<h2>Register</h2>
+	<form action="/register/" method="POST">
+	<input type="username" name="username" placeholder="Username"><br>
+	<input type="password" name="password" placeholder="Password"><br>
+	<input type="email" name="email" placeholder="email@naver.com">
+	<br><br>
+	<input type="submit" value="회원가입">
+	</form>
+</div></center>
+```
+
++ 회원가입 버튼을 누르면 POST 메서드로 '/register'페이지로 username, password, email 정보가 request 형태로 보내지도록 한다.
++ placeholder : 입력 박스에 아무것도 입력되어 있지 않을 때 뜨는 문구
+
+> <h3>login.html
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		<p>이미 로그인하셨습니다.</p>
+	{% else %}
+	<center><div>
+		<h2>Login</h2>
+		<form action="/login" method="POST">
+		<input type="username" name="username" placeholder="Username">
+		<input type="password" name="password" placeholder="Password">
+		<br><br>
+		<input type="submit" value="로그인">
+		</form>
+	</div></center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
++ 회원가입을 완료하거나 로그인했을 시에 나타나는 페이지이다.
++ 이미 로그인이 되어 있다면 '이미 로그인하셨습니다.'라는 문구가 뜨도록 한다.
++ '로그인'버튼을 누르면, POST 메서드 방식으로 '/login' URL로 username, password가 request 형태로 보내지도록 한다.
+
+## 3) 데이터베이스 설정
+
++ 데이터베이스 설정을 위한 라이브러리 : SQLAlchemy
+
+``` python
+from flask_sqlalchemy import SQLAlchemy
+```
+
++ 플라스크에서 데이터베이스를 설정해보자.
++ 플라스크 객체를 설정하고 app.config를 통해 데이터베이스 주소를 적는다.
++ test.db 데이터베이스 파일이 없으면 만들고 있으면 연결할 것이다.
++ 플라스크 객체를 위한 데이터베이스를 만든다.
+
+``` python
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
+```
+
++ 회원 정보를 담는 데이터베이스의 파일 모델을 정의하자.
++ 가입 시 요구할 정보는 아이디, 비밀번호, 이메일이다.
++ **db.Column**으로 자료형 등을 정의한다.
++ id를 기본 데이터베이스 자료형으로 만들고 그 안에 username, password, email을 넣어 만든다.
+	+ id : 기본 데이터베이스, 정수형으로 설정
+	+ username, password, email : 문자형으로 설정
+		+ username과 email은 고유값이므로 unique=True
+
+``` python
+class User(db.Model):
+	""" Create user table"""
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(80), unique=True)
+	password = db.Column(db.String(80))
+	email = db.Column(db.String(80), unique=True)
+
+	def __init__(self, username, password, email):
+		self.username = username
+		self.password = password
+		self.email = email
+```
+
++ 다음과 같이 작성하면 정의한 클래스를 사용해 데이터베이스를 필터링한다.
+
+``` python
+User.query.filter_by(username=name) #데이터베이스에 인자 값을 기준으로 필터 쿼리 날리기
+```
+
++ 다음은 데이터베이스 값 추가다.
+
+``` python
+db.session.add(User(username=request.form['username'], password=request.form['password'], 
+	email=request.form['email']))
+```
+
++ sqlite는 데이터베이스에 쿼리를 보냈다면 적용을 위해 commit 작업이 필요하다.
+
+``` python
+db.session.commit()
+```
+
++ 프로그램이 시작 시 데이터베이스를 만들고 시작한다.
+
+``` python
+if __name__ == '__main__':
+	db.create_all()
+```
+
+## 4) 세션 설정
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
