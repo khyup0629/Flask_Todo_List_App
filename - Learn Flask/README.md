@@ -36,6 +36,13 @@
 + [11. 파이썬 플라스크 에러와 로깅](#11-파이썬-플라스크-에러와-로깅)
 	+ [1) 에러 처리](#1-에러-처리)
 	+ [2) 로깅](#2-로깅)
++ [12. 로그인과 세션, SQLite DB](#12-로그인과-세션-SQLite-DB)
+	+ [1) 라이브러리 설치 및 파일 구성](#1-라이브러리-설치-및-파일-구성)
+	+ [2) 회원가입 및 로그인 폼 만들기](#2-회원가입-및-로그인-폼-만들기)
+	+ [3) 데이터베이스 설정](#3-데이터베이스-설정)
+	+ [4) 세션 설정](#4-세션-설정)
+	+ [5) 블로그 페이지 오픈 설정](5-블로그-페이지-오픈-설정)
+	+ [6) 서버 구현](#6-서버-구현)
 
 ---
 # 1. Hello Flask
@@ -2019,15 +2026,278 @@ if __name__ == '__main__':
 
 ## 4) 세션 설정
 
++ 세션은 HTTP에서 로그인과 같은 인증 처리나 장바구니 같은 기능을 구현하기 위해 클라이언트와 서버 간 상태 값을 저장하는 기술이다.
++ 세션은 클라이언트(웹 브라우저)가 서버에 접속 시 서버에서 클라이언트에 부여하는 아이디값으로 표현된다.
++ 이 아이디값을 세션 아이디로 부르며 HTTP 헤더에 쿠키를 이용해 생성된다.
+
++ 웹에서의 쿠키는 HTTP 헤더에 포함되며 key=value 형태를 가진다. 
++ 웹 서버로부터 쿠키를 받은 웹 브라우저는 다시 웹 서버에 접속할 때 전 서버에서 받았던 쿠키를 헤더에 넣어 보내 현재 상태를 파악한다.
+
++ 기본 세션을 이용하려면 세션 모듈을 불러온다.
+
+``` python
+from flask import session
+```
+
++ 플라스크 객체에 암호화 키를 시크릿키로 정의한다.
+
+``` python
+if __name__ == '__main__':
+	db.create_all()
+	app.secret_key = "123123123"
+```
+
++ app.py에서 메인 페이지인 home 함수에는 다음과 같이 정의한다. 
++ 이는 세션을 가져와 로그인 여부를 확인한다. 로그인 여부를 확인해 index.html을 불러오고 상황에 따라 로그인 되었다면 사용자 아이디를 전달한다.
+
+``` python
+@app.route('/', methods=['GET', 'POST'])
+def home():
+	if not session.get('logged_in'):
+		return render_template('index.html')
+	else:
+		if request.method == 'POST':
+			username = request.form['username']
+			return render_template('index.html', data=blogopen(username))
+		return render_template('index.html')
+```
+
+> <h3>index.html
+
++ 로그인이 되어 있다면
+	+ app.py에서 전달 받은 블로그 정보가 있다면 그것을 표시하고 
+	+ 블로그 정보가 없다면 블로그에 대한 정보를 제출할 수 있도록 한다.
++ 로그인이 되어 있지 않다면
+	+ 로그인 또는 회원 가입 링크를 띄운다.
+
+``` python
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		{% if data %}
+			<h3>{{ data }}</h3>
+		{% else %}
+		<center><div>
+			<a href="/logout">Logout</a><br><br>
+			<form action="" method="POST">
+			<input type="username" name="username" placeholder="Blog id">
+			<input type="submit" value="Open">
+			</form>
+		</div></center>
+		{% endif %}
+
+	{% else %}
+	<center><div>
+		<p>로그인하지 않은 상태입니다. </p>
+		<p>서비스를 이용하려면 로그인해주세요.</p>
+		<a href="/login">Login</a>
+		<a href="/register">Register</a>
+	</div></center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
+## 5) 블로그 페이지 오픈 설정
+
+> <h3> service.py
+
++ 네이버 블로그 URL은 'https://blog.naver.com/' + '회원 아이디'로 정의된다.
++ '회원 아이디'에 해당하는 정보를 입력해서 제출하면 그 정보를 통해 블로그 페이지를 열어주는 blogopen이란 함수를 정의한다.
+
+``` python
+import webbrowser
 
 
+def blogopen(url):
+	link = 'https://blog.naver.com/%s'
+	blog = link % (url)
+	webbrowser.open(blog)
+```
+
+## 6) 서버 구현
+
+> <h3>app.py
+
+``` python
+from flask import Flask, url_for, render_template
+from flask import request, redirect, session
+from flask_sqlalchemy import SQLAlchemy
+from service import blogopen
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+     return render_template('page_not_found.html'), 404
 
 
+class User(db.Model):
+	""" Create user table"""
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(80), unique=True)
+	password = db.Column(db.String(80))
+	email = db.Column(db.String(80), unique=True)
+
+	def __init__(self, username, password, email):
+		self.username = username
+		self.password = password
+		self.email = email
 
 
+@app.route('/', methods=['GET', 'POST'])
+def home():
+	if not session.get('logged_in'):
+		return render_template('index.html')
+	else:
+		if request.method == 'POST':
+			username = request.form['username']
+			return render_template('index.html', data=blogopen(username))
+		return render_template('index.html')
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	"""Login Form"""
+	if request.method == 'GET':
+		return render_template('login.html')
+	else:
+		name = request.form['username']
+		passw = request.form['password']
+		try:
+			data = User.query.filter_by(username=name, password=passw).first()
+			if data is not None:
+				session['logged_in'] = True
+				return redirect(url_for('home'))
+			else:
+				return 'Dont Login'
+		except:
+			return "Dont Login"
+
+
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+	"""Register Form"""
+	if request.method == 'POST':
+		new_user = User(username=request.form['username'], password=request.form['password'],
+			email=request.form['email'])
+
+		db.session.add(new_user)
+		db.session.commit()
+		return render_template('login.html')
+	return render_template('register.html')
+
+
+@app.route("/logout")
+def logout():
+	"""Logout Form"""
+	session['logged_in'] = False
+	return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+	db.create_all()
+	app.secret_key = "123123123"
+	app.run(host='127.0.0.1', debug=True)
+```
+
+> <h3>코드 분석
+
++ 앞서 설명했던 부분들은 생략하고 분석한다.
+
+```
+@app.errorhandler(404)
+def page_not_found(error):
+     return render_template('page_not_found.html'), 404
+```
+
++ 앞서 11강에서 설명한 요청한 페이지가 없을 때 사용자 지정된 페이지를 나타내는 코드이다.
+
+``` python
+@app.route('/', methods=['GET', 'POST'])
+def home():
+	if not session.get('logged_in'):
+		return render_template('index.html')
+	else:
+		if request.method == 'POST':
+			username = request.form['username']
+			return render_template('index.html', data=blogopen(username))
+		return render_template('index.html')
+```
+
++ 홈페이지(index.html)로 들어갈 때 로그인이 되어 있지 않다면 바로 홈페이지(index.html)을 띄운다.
++ 로그인이 되어 있다면
+	+ 로그인 페이지(login.html)에서 '로그인' 버튼을 눌러 홈페이지로 올 경우(POST) username을 통해 blogopen 함수를 보내면서 홈페이지(index.html)를 연다.
+	+ 홈페이지 링크를 눌러서 들어올 경우(GET) 그냥 홈페이지(index.html)를 띄운다.
+
+``` python
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	"""Login Form"""
+	if request.method == 'GET':
+		return render_template('login.html')
+	else:
+		name = request.form['username']
+		passw = request.form['password']
+		try:
+			data = User.query.filter_by(username=name, password=passw).first()
+			if data is not None:
+				session['logged_in'] = True
+				return redirect(url_for('home'))
+			else:
+				return 'Dont Login'
+		except:
+			return "Dont Login"
+```
+
++ 홈페이지(index.html)에서 'Login' 링크를 누르면(GET) 로그인 페이지(login.html)를 띄운다.
++ 로그인 페이지(login.html)에서 '로그인' 버튼을 통해 제출하면(POST) 보내져 온 정보(username, password)를 통해 데이터베이스(User) 클래스를 필터링해서 찾는다.
++ 필터링한 정보가 존재하는 경우, 로그인 세션 상태를 True로 변경하고 홈페이지(index.html)로 보낸다.
++ 필터링한 정보가 존재하지 않는 경우, "Dont Login"이라는 문구가 뜨도록 한다.
++ 마찬가지로 로그인을 함에 있어 정상적인 로그인 외 예외적인 경우가 발생하면 "Dont Login" 문구가 뜨도록 한다.
+
+``` python
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+	"""Register Form"""
+	if request.method == 'POST':
+		new_user = User(username=request.form['username'], password=request.form['password'],
+			email=request.form['email'])
+
+		db.session.add(new_user)
+		db.session.commit()
+		return render_template('login.html')
+	return render_template('register.html')
+```
+
++ 홈페이지(index.html)에서 'Register'링크를 누르면(GET) 'register.html' 페이지를 띄운다.
++ 'register.html' 페이지에서 '회원가입'버튼을 통해 '/register'로 오게 되면(POST)   
+ 회원에 대한 정보(username, password, email)을 Class 형태로 데이터베이스에 저장하고   
+ 로그인 페이지('login.html')를 띄운다.
+
+``` python
+@app.route("/logout")
+def logout():
+	"""Logout Form"""
+	session['logged_in'] = False
+	return redirect(url_for('home'))
+```
+
++ '로그아웃' 링크를 누르면 로그인 세션을 False로 바꾸고 홈페이지(index.html)로 간다.
+
+[목차](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221874500996
+
+---
 
 
 
