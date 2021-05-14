@@ -2106,6 +2106,7 @@ def home():
 ```
 
 ![image](https://user-images.githubusercontent.com/43658658/118230289-6243c700-b4c8-11eb-9b01-e7f3e949b5ea.png)
+![image](https://user-images.githubusercontent.com/43658658/118230964-5b698400-b4c9-11eb-9136-e38ad3a582f4.png)
 
 ## 5) 블로그 페이지 오픈 설정
 
@@ -2245,7 +2246,6 @@ def home():
 	+ 홈페이지 링크를 눌러서 들어올 경우(GET) 그냥 홈페이지(index.html)를 띄운다.
 
 ![image](https://user-images.githubusercontent.com/43658658/118230325-725ba680-b4c8-11eb-9b8d-e437959584c3.png)
-
 ![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
 
 ``` python
@@ -2275,7 +2275,6 @@ def login():
 + 마찬가지로 로그인을 함에 있어 정상적인 로그인 외 예외적인 경우가 발생하면 "Dont Login" 문구가 뜨도록 한다.
 
 ![image](https://user-images.githubusercontent.com/43658658/118230831-32e18a00-b4c9-11eb-8f27-ac629cec868e.png)
-
 ![image](https://user-images.githubusercontent.com/43658658/118231271-dd59ad00-b4c9-11eb-984d-d6d5126d045a.png)
 
 ``` python
