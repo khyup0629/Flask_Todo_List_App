@@ -2477,6 +2477,8 @@ def logout():
 }
 ```
 
+![image](https://user-images.githubusercontent.com/43658658/118491342-dd6fdc00-b759-11eb-99d3-be8c8e314639.png)
+
 + 메인 화면 등 메시지를 표시할 부분은 메시지 상자를 위해 500 x 400 크기의 모서리가 5px만큼 둥근 테두리 상자를 넣었다.
 
 ``` css
@@ -2488,35 +2490,13 @@ def logout():
 }
 ```
 
-+ 다음은 로그인 폼이다. 
+![image](https://user-images.githubusercontent.com/43658658/118491317-d3e67400-b759-11eb-83fa-bf1a54c84be4.png)
+
++ 다음은 회원가입 폼을 만든다.
++ 기본적으로 메시지 박스와 동일하게 박스 내에 글자가 존재하도록 작성한다.
++ register-form label or input은 register-form 내에 label이나 input이 있을 경우 register-form을 적용하는 것만으로도 자동으로 label, input의 서식이 적용된다.
++ [type='submit']을 통해 input의 submit 타입만 따로 서식을 지정할 수 있다.
 + 테두리를 만들고 각 라벨과 버튼의 간격을 부여한다.
-
-``` css
-/* login form */
-#login-form {
-    width:300px;
-    border: 2px solid gray;
-    border-radius: 5px;
-}
-
-#login-form input, #login-form label{
-    display: block;
-}
-
-#login-form label{
-    margin-top: 10px;
-}
-
-#login-form input{
-    margin-top: 5px;
-}
-
-#login-form input[type='submit']{
-    margin: 10px auto;
-}
-```
-
-+ 같은 방식으로 회원가입 폼도 만든다.
 
 ``` css
 /* register-form */
@@ -2543,7 +2523,155 @@ def logout():
 }
 ```
 
+![image](https://user-images.githubusercontent.com/43658658/118491397-ee205200-b759-11eb-959f-014a62a3ced5.png)
 
++ 다음은 로그인 폼이다.
+
+``` css
+/* login form */
+#login-form {
+    width:300px;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#login-form input, #login-form label{
+    display: block;
+}
+
+#login-form label{
+    margin-top: 10px;
+}
+
+#login-form input{
+    margin-top: 5px;
+}
+
+#login-form input[type='submit']{
+    margin: 10px auto;
+}
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118491223-b7e2d280-b759-11eb-837d-9d7716b40d13.png)
+
+## 4) 템플릿 파일 코드 변경
+
+> <h3>index.html
+
++ base.html에서 CSS 파일을 적용했으므로 extends "base.html"을 한 것만으로도 다른 모든 템플릿에서 CSS를 적용할 수 있다.
++ CSS 코드에서 이름지어줬던 '#btn'(버튼) '#message'(메시지 박스)를 id='적용할 서식 이름'을 통해 적용할 수 있다.
++ 즉, id="btn"로 버튼 서식을 적용할 수 있고, id="message"로 메시지 박스 서식을 적용할 수 있다.
+
++ 12강에서 **하이퍼링크** 형식으로 로그인, 회원가입, 로그아웃을 구현했다면,
++ 13강에서는 **버튼** 형식으로 CSS를 적용해 구현했다.
+
++ 여담으로 한 가지 의문점은 분명 'Register' 버튼을 누르면 '/register'로 이동하게 작성했는데 실제로 URL은 '/register/'로 이동한다는 것이다.
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		{% if data %}
+			<h3>{{ data }}</h3>
+		{% else %}
+		<center>
+			<button type="button" id="btn" onclick="location.href='/logout'">Logout</button>
+			<form action="" method="POST" id="message">
+			  <br><input type="username" name="username" placeholder="Blog id">
+			  <input type="submit" value="Open">
+			</form>
+		</center>
+		{% endif %}
+
+	{% else %}
+	<center>
+		<button type="button" id="btn" onclick="location.href='/login'">Login</button>
+		<button type="button" id="btn" onclick="location.href='/register'">Register</button>
+		<div id="message">
+			<p>로그인하지 않은 상태입니다. </p>
+			<p>서비스를 이용하려면 로그인해주세요.</p>
+		</div>
+	</center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
++ 로그인이 되어 있지 않다면
+
+![image](https://user-images.githubusercontent.com/43658658/118487415-a5669a00-b755-11eb-9ed4-4a8ad1df97b1.png)
+
++ 로그인이 되어 있다면
+
+![image](https://user-images.githubusercontent.com/43658658/118487559-cdee9400-b755-11eb-9774-01f0889ee749.png)
+
+> <h3>register.html
+
++ id="register-form"을 통해 CSS 코드의 register-form 서식을 적용했다.
+
+``` html
+<!DOCTYPE html>
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		<p>또 가입하시게요?</p>
+	{% else %}
+	<center><div>
+		<h2>Register</h2>
+		<form action="/register/" method="POST" id="register-form">
+		  <label class="legend">아이디</label>
+		  <input type="username" name="username" placeholder="ID"><br>
+
+		  <label class="legend">비밀번호</label>
+		  <input type="password" name="password" placeholder="Password"><br>
+
+		  <label class="legend">이메일</label>
+		  <input type="email" name="email" placeholder="email@naver.com">
+		  <br><br>
+		  <input type="submit" value="회원가입">
+		</form>
+	</div></center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118490356-d399a900-b758-11eb-9d4a-d61a28692c42.png)
+
+> <h3>login.html
+
++ register-form과 마찬가지로 login-form을 적용한다.
+
+``` html
+<!DOCTYPE html>
+<html>
+	{% extends "base.html" %}
+	{% block content %}
+	{% if session['logged_in'] %}
+		<p>이미 로그인하셨습니다.</p>
+	{% else %}
+	<center><div class=login>
+		<h2>Login</h2>
+		<form action="/login" method="POST" id="login-form">
+		  <label class="legend">아이디</label>
+		  <input type="username" name="username" placeholder="ID">
+
+		  <label class="legend">비밀번호</label>
+		  <input type="password" name="password" placeholder="Password"><br><br>
+
+		  <input type="submit" value="로그인">
+		</form>
+	</div></center>
+	{% endif %}
+	{% endblock %}
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118491121-a13c7b80-b759-11eb-97a6-08eef5d00923.png)
 
 
 
