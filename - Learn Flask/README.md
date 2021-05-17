@@ -2363,7 +2363,7 @@ def logout():
 + CSS를 적용시켜보자.
 
 [자료]
-+ [13강 자료]
++ [13강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/13%EA%B0%95%20%EC%9E%90%EB%A3%8C)
 
 ## 1) 파일 구성
 
