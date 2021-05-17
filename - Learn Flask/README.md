@@ -2350,6 +2350,198 @@ def logout():
 + https://m.blog.naver.com/dsz08082/221874500996
 
 ---
+# 13. 로그인 서비스 CSS 적용
+
+> <h3>학습 목표
+
++ 플라스크에서 CSS 파일을 불러오는 법을 알아보자.
++ CSS를 적용시켜보자.
+
+[자료]
++ [13강 자료]
+
+## 1) 파일 구성
+
++ 이전 12강과 비교해서 HTML 템플릿과 서버 구현 코드와 내용은 크게 다르지 않고, CSS 파일이 추가되었다.
++ CSS 파일은 static 폴더에 추가한다.
+	+ CSS 파일은 메모장에서 '.css' 형식으로 저장하면 생성된다.
+
+![image](https://user-images.githubusercontent.com/43658658/118481397-6aad3380-b74e-11eb-802c-81572b5d732b.png)
+
++ static/images에 home.png 이미지를 추가한다.
+
+![image](https://user-images.githubusercontent.com/43658658/118481459-7a2c7c80-b74e-11eb-921b-ff456fbaa518.png)
+
+## 2) 플라스크 CSS 파일 불러오는 법
+
++ 플라스크에서 CSS 파일을 불러오려면 HTML 파일을 렌더링하되 HTML 파일 내에 작성한 CSS를 불러오는 태그를 작성하면 된다. 
++ CSS를 HTML 에 적용하는 방법은 **내부, 외부, 인라인** 스타일이 있으며 여기서는 **외부**를 사용한다.
++ 아래의 코드를 html의 head 사이에 넣으면 외부 방식으로 CSS 파일이 적용된다.
+
+``` html
+<link rel="stylesheet" type="text/css" href="이름.css"> #내부 작성한 css, 경로 지정.
+```
+
+## 3) 12강 자료에서 CSS 적용하기
+
++ 모든 템플릿에서 base.html을 불러오므로 작성한 CSS 파일을 base.html에서만 불러와도 다른 모든 템플릿에 적용된다.
++ base.html 에서 모든 템플릿 위에 쌓이는 상단 레이아웃에 쓰이는 이미지 크기를 변경했고, 집 모양을 누르면 메인 화면으로 돌아오도록 변경했다.
+
+> <h3>base.html
+
+``` html
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+	<title>flask Service</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='file.css') }}">
+  </head>
+  <body><center><div>
+  	<hr width="100%" color="black"/>
+  	<center>
+  		<img src="{{ url_for('static',filename='images/naver.png')}}" width="50" />
+  		<h3>Naver Blogpage Open</h3>
+  	</center>
+  	<hr width="100%" color="black"/>
+    <a href="/"><img src="{{ url_for('static',filename='images/home.png')}}" width="30" /></a>
+	</div>
+  	</center>
+    <hr>
+    {% block content %}{% endblock %}
+  </body>
+</html>
+```
+
+> <h3>CSS 코드 분석
+
++ 사이트의 모든 버튼(로그인, 회원가입, 로그아웃)은 버튼 디자인 모음에서 가져왔다.
++ 버튼 디자인 모음 : 	
+	+ https://nanati.me/css-button-design/
+	+ https://codepen.io/
+
+``` css
+#btn {
+   background-color: #c47135;
+   border: none;
+   color: #ffffff;
+   cursor: pointer;
+   display: inline-block;
+   font-family: 'BenchNine', Arial, sans-serif;
+   font-size: 1em;
+   line-height: 1em;
+   margin: 15px 40px;
+   outline: none;
+   position: relative;
+   font-weight: 700;
+   white-space:nowrap;
+}
+
+#btn:before,
+#btn:after {
+  border-color: transparent;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  border-style: solid;
+  border-width: 0;
+  content: "";
+  height: 24px;
+  position: absolute;
+  width: 24px;
+}
+
+#btn:before {
+  border-color: #c47135;
+  border-right-width: 2px;
+  border-top-width: 2px;
+  right: -5px;
+  top: -5px;
+}
+#btn:after {
+  border-bottom-width: 2px;
+  border-color: #c47135;
+  border-left-width: 2px;
+  bottom: -5px;
+  left: -5px;
+}
+#btn:hover,
+#btn:hover {
+  background-color: #c47135;
+}
+#btn:hover:before,
+#btn.hover:before,
+#btn:hover:after,
+#btn.hover:after {
+  height: 100%;
+  width: 100%;
+}
+```
+
++ 메인 화면 등 메시지를 표시할 부분은 메시지 상자를 위해 500 x 400 크기의 모서리가 5px만큼 둥근 테두리 상자를 넣었다.
+
+``` css
+#message {
+    width:500px;
+    height: 400px;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+```
+
++ 다음은 로그인 폼이다. 
++ 테두리를 만들고 각 라벨과 버튼의 간격을 부여한다.
+
+``` css
+/* login form */
+#login-form {
+    width:300px;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#login-form input, #login-form label{
+    display: block;
+}
+
+#login-form label{
+    margin-top: 10px;
+}
+
+#login-form input{
+    margin-top: 5px;
+}
+
+#login-form input[type='submit']{
+    margin: 10px auto;
+}
+```
+
++ 같은 방식으로 회원가입 폼도 만든다.
+
+``` css
+/* register-form */
+#register-form {
+    width:300px;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+#register-form input, #register-form label{
+    display: block;
+}
+
+#register-form label{
+    margin-top: 0px;
+}
+
+#register-form input{
+    margin-top: 0px;
+}
+
+#register-form input[type='submit']{
+    margin: 5px auto;
+}
+```
 
 
 
