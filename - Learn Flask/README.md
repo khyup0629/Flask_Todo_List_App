@@ -44,10 +44,13 @@
 	+ [5) 블로그 페이지 오픈 설정](#5-블로그-페이지-오픈-설정)
 	+ [6) 서버 구현](#6-서버-구현)
 + [13. 로그인 서비스 CSS 적용](#13-로그인-서비스-CSS-적용)
-	+ [1) 파일 구성](#1-파일-구성)
+	+ 1) 파일 구성
 	+ [2) 플라스크 CSS 파일 불러오는 법](#2-플라스크-CSS-파일-불러오는-법)
 	+ [3) 12강 자료에서 CSS 적용하기](#3-12강-자료에서-CSS-적용하기)
 	+ [4) 템플릿 파일 코드 변경](#4-템플릿-파일-코드-변경)
++ [14. 계산기 페이지 만들기](#14-계산기-페이지-만들기)
+	+ 1) 파일 구성
+	+ [2) 계산기 페이지 만들기](#2-계산기-페이지-만들기)
 
 ---
 # 1. Hello Flask
@@ -2685,7 +2688,217 @@ def logout():
 + https://m.blog.naver.com/dsz08082/221885395159
 
 ---
+# 14. 계산기 페이지 만들기
 
+> <h3>학습 목표
+
++ 웹 페이지에서 두 값을 받아 사칙연산 결과를 반환하는 웹 페이지를 구성해보자.
+
+[자료]
+
++ [14강 자료 바로가기]
+
+## 1) 파일 구성
+
++ 정적 파일 폴더, 템플릿 파일 폴더, 서버 파일을 만든다.
+
+![image](https://user-images.githubusercontent.com/43658658/118602705-fa55ef00-b7ed-11eb-930c-6d9239049efc.png)
+
+
+## 2) 계산기 페이지 만들기
+
+> <h3>file.css
+
+![image](https://user-images.githubusercontent.com/43658658/118607777-ef05c200-b7f3-11eb-8b1f-c26c38788526.png)
+
++ 먼저 아래와 같이 메세지 박스 서식을 만든다.
+
+``` css
+#message{
+    width:700px;
+    height:100px;
+    border:2px solid gray;
+    border-radius:5px;
+}
+```
+
+> <h3>base.html
+
+![image](https://user-images.githubusercontent.com/43658658/118607726-dc8b8880-b7f3-11eb-8766-a95887f92969.png)
+
++ 다음으로 베이스 템플릿 파일을 작성한다.
++ file.css를 base.html의 head부분에 한 번 적어주는 것으로 다른 파일에서 file.css의 서식을 모두 사용가능하게 된다.
++ {% block content %}{% endblock %} : 이것이 없으면 다른 템플릿 파일에서 extends 했을 때 base.html 아래로는 페이지에 표시되지 않는다. 
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calc Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='file.css') }}">
+</head>
+<body>
+    <hr width="100%" color="black"/>
+    <center>
+        <h3>Calc Page</h3>
+    </center>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
+```
+
+> <h3>app.py
+
++ URL의 /뒤쪽에 아무 값이 없으면, main.html의 if 아래 코드를 수행, 계산값을 입력 받는 서식을 나타낸다.
+
+![image](https://user-images.githubusercontent.com/43658658/118608818-14df9680-b7f5-11eb-8f1c-3030b3939e1c.png)
+
++ 계산 값이 입력되어 GET 메서드로 보내지면 calculate 함수를 통해 input1, input2 값을 받고   
+숫자인 것이 확인 되었을 때 plus, minus, multiply, div에 따라 사칙연산을 수행해 그 값을   
+URL을 통해 '/answer' 형식으로 다시 넘긴다.   
+그럼 @app.route('/<url_answer>')에서 url_answer에 answer값이 들어가게 되고   
+render_answer은 빈 값이 아니게 되므로, main.html에서 else 밑의 코드를 수행, 계산된 결괏값을 나타내게 된다.
+ 
+![image](https://user-images.githubusercontent.com/43658658/118608921-3476bf00-b7f5-11eb-906b-12c07abc0a5d.png)
+
+``` python
+from flask import Flask, render_template, request, redirect, url_for
+app = Flask(__name__)
+
+
+@app.route('/')
+@app.route('/<url_answer>')
+def hello_world(url_answer=None):
+    answer = url_answer
+    return render_template('main.html', render_answer=answer)
+
+
+@app.route('/calculate')
+def calculate():
+    input_data1 = request.args.get('input1')
+    input_data2 = request.args.get('input2')
+    if type(input_data1) == type("1") and type(input_data2) == type("1"):
+        if request.args.get('inputc') == 'plus':
+            answer = int(input_data1) + int(input_data2)
+        elif request.args.get('inputc') == 'minus':
+            answer = int(input_data1) - int(input_data2)
+        elif request.args.get('inputc') == 'multiply':
+            answer = int(input_data1) * int(input_data2)
+        elif request.args.get('inputc') == 'div':
+            answer = int(input_data1) / int(input_data2)
+        else:
+            answer = int(input_data1) + int(input_data2)
+    else:
+        answer = "No Value"
+
+    next_url = '/' + str(answer)
+    return redirect(next_url)
+
+
+if __name__ == '__main__':
+    app.run()
+```
+
+> <h3>main.html
+
+![image](https://user-images.githubusercontent.com/43658658/118608818-14df9680-b7f5-11eb-8f1c-3030b3939e1c.png)
+
++ 메인 페이지를 나타내는 템플릿 파일이다.
++ URL의 '/' 뒤에 아무것도 없다면(None) 계산값을 입력받는 페이지를 나타낸다.
++ 계산값은 input 형식으로 input1, input2를 입력받고, select 형식으로 사칙연산 중 하나를 선택해서
++ GET 메서드로 '/calculate' URL로 보낸다.
++ 그럼 app.py 서버가 이를 받아 계산을 수행하고 '/answer' 형식으로 다시 보내면
++ render_answer에 값이 존재하므로 else 밑의 코드를 수행하며 계산된 값을 표시하는 페이지를 나타낸다.
+ 
+``` html
+<!DOCTYPE html>
+<html lang="en">
+    {% extends "base.html" %}
+    {% block content %}
+    <center>
+        <div>
+            <h1>계산기 :)</h1>
+            {% if render_answer == None %}
+                <div id="message">
+                    <p>계산할 값을 입력하세요.</p>
+                </div>
+                <br>
+                <form action="/calculate" id="calculate">
+                    <input name="input1" type="text">
+                    <select name="inputc">
+                        <option value="" selected>-- 연산자 선택 --</option>
+                        <option value="plus">+</option>
+                        <option value="minus">-</option>
+                        <option value="multiply">*</option>
+                        <option value="div">/</option>
+                    </select>
+                    <input name="input2" type="text">
+                    <br><br>
+                    <input type="submit">
+                </form>
+            {% else %}
+                <div id="message">
+                    <p>계산된 값입니다.</p>
+                </div>
+                <br>
+                <h2>{{ render_answer }}</h2>
+                <form action="/">
+                    <input type="submit" value="홈으로 돌아가기">
+                </form>
+            {% endif %}
+            {% endblock %}
+        </div>
+    </center>
+</html>
+```
+
++ 값을 입력받는 형식은 input1, inputc, input2순으로 나타나고
++ input1, input2는 input 형식, inputc는 select 형식으로 받는다.
+
+![image](https://user-images.githubusercontent.com/43658658/118610150-6dfbfa00-b7f6-11eb-9df2-6ce0b2e1d342.png)
+
+``` html
+	    <form action="/calculate" id="calculate">
+                    <input name="input1" type="text">
+                    <select name="inputc">
+                        <option value="" selected>-- 연산자 선택 --</option>
+                        <option value="plus">+</option>
+                        <option value="minus">-</option>
+                        <option value="multiply">*</option>
+                        <option value="div">/</option>
+                    </select>
+                    <input name="input2" type="text">
+                    <br><br>
+                    <input type="submit">
+                </form>
+```
+
+![image](https://user-images.githubusercontent.com/43658658/118608921-3476bf00-b7f5-11eb-906b-12c07abc0a5d.png)
+
++ 계산된 값이 존재하면 계산된 값을 표시하고 '홈으로 돌아가기' 버튼을 누르면
++ GET 메서드 형식으로 '/' URL로 보냄으로써 url_answer = None이 되어 다시 계산 값을 입력받는 페이지가 나타나게 된다.
+
+``` html
+	{% else %}
+                <div id="message">
+                    <p>계산된 값입니다.</p>
+                </div>
+                <br>
+                <h2>{{ render_answer }}</h2>
+                <form action="/">
+                    <input type="submit" value="홈으로 돌아가기">
+                </form>
+```
+
+[목차](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221890697862
+
+---
 
 
 
