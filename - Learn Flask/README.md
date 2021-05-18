@@ -2696,7 +2696,7 @@ def logout():
 
 [자료]
 
-+ [14강 자료 바로가기]
++ [14강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/14%EA%B0%95%20%EC%9E%90%EB%A3%8C(%EA%B3%84%EC%82%B0%EA%B8%B0%20%EB%A7%8C%EB%93%A4%EA%B8%B0))
 
 ## 1) 파일 구성
 
