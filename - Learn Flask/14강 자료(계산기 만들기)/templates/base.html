@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calc Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='file.css') }}">
+</head>
+<body>
+    <hr width="100%" color="black"/>
+    <center>
+        <h3>Calc Page</h3>
+    </center>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
