@@ -44,12 +44,12 @@
 	+ [5) 블로그 페이지 오픈 설정](#5-블로그-페이지-오픈-설정)
 	+ [6) 서버 구현](#6-서버-구현)
 + [13. 로그인 서비스 CSS 적용](#13-로그인-서비스-CSS-적용)
-	+ 1) 파일 구성
+	+ [1) 파일 구성]
 	+ [2) 플라스크 CSS 파일 불러오는 법](#2-플라스크-CSS-파일-불러오는-법)
 	+ [3) 12강 자료에서 CSS 적용하기](#3-12강-자료에서-CSS-적용하기)
 	+ [4) 템플릿 파일 코드 변경](#4-템플릿-파일-코드-변경)
 + [14. 계산기 페이지 만들기](#14-계산기-페이지-만들기)
-	+ 1) 파일 구성
+	+ [1) 파일 구성]
 	+ [2) 계산기 페이지 만들기](#2-계산기-페이지-만들기)
 
 ---
@@ -2756,9 +2756,8 @@ def logout():
 ![image](https://user-images.githubusercontent.com/43658658/118608818-14df9680-b7f5-11eb-8f1c-3030b3939e1c.png)
 
 + 계산 값이 입력되어 GET 메서드로 보내지면 calculate 함수를 통해 input1, input2 값을 받고   
-숫자인 것이 확인 되었을 때 plus, minus, multiply, div에 따라 사칙연산을 수행해 그 값을   
-URL을 통해 '/answer' 형식으로 다시 넘긴다.   
-그럼 @app.route('/<url_answer>')에서 url_answer에 answer값이 들어가게 되고   
+숫자인 것이 확인 되었을 때 plus, minus, multiply, div에 따라 사칙연산을 수행해 그 값을 URL을 통해 '/answer' 형식으로 다시 넘긴다.   
++ 그럼 @app.route('/<url_answer>')에서 url_answer에 answer값이 들어가게 되고   
 render_answer은 빈 값이 아니게 되므로, main.html에서 else 밑의 코드를 수행, 계산된 결괏값을 나타내게 된다.
  
 ![image](https://user-images.githubusercontent.com/43658658/118608921-3476bf00-b7f5-11eb-906b-12c07abc0a5d.png)
@@ -2807,10 +2806,8 @@ if __name__ == '__main__':
 
 + 메인 페이지를 나타내는 템플릿 파일이다.
 + URL의 '/' 뒤에 아무것도 없다면(None) 계산값을 입력받는 페이지를 나타낸다.
-+ 계산값은 input 형식으로 input1, input2를 입력받고, select 형식으로 사칙연산 중 하나를 선택해서
-+ GET 메서드로 '/calculate' URL로 보낸다.
-+ 그럼 app.py 서버가 이를 받아 계산을 수행하고 '/answer' 형식으로 다시 보내면
-+ render_answer에 값이 존재하므로 else 밑의 코드를 수행하며 계산된 값을 표시하는 페이지를 나타낸다.
++ 계산값은 input 형식으로 input1, input2를 입력받고, select 형식으로 사칙연산 중 하나를 선택해서 GET 메서드로 '/calculate' URL로 보낸다.
++ 그럼 app.py 서버가 이를 받아 계산을 수행하고 '/answer' 형식으로 다시 보내면 render_answer에 값이 존재하므로 else 밑의 코드를 수행하며 계산된 값을 표시하는 페이지를 나타낸다.
  
 ``` html
 <!DOCTYPE html>
