@@ -2933,6 +2933,7 @@ pip install flask-mail
 
 > <h3>IMAP 사용 설정
 
++ **IMAP** 액세스를 설정하고 **SMTP** 설정을 변경하면 **플라스크**와 같은 **다른 이메일 클라이언트에서 Gmail을 사용**할 수 있다.
 + 위의 링크로 들어가면 아래와 같이 IMAP 사용을 설정하는 방법이 소개된다.
 
 ![image](https://user-images.githubusercontent.com/43658658/119221663-580a7400-bb2b-11eb-9787-f241f150eb99.png)
