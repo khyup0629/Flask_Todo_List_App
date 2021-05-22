@@ -2906,6 +2906,10 @@ if __name__ == '__main__':
 
 + 플라스크를 통해 이메일을 보낼 수 있는 기능을 만들어보자.
 
+[자료]
+
++ [15강 자료 바로가기](https://github.com/khyup0629/Flask_Todo_List_App/tree/main/-%20Learn%20Flask/15%EA%B0%95%20%EC%9E%90%EB%A3%8C)
+
 ## 1) 사전 작업
 
 + 플라스크는 기본적으로 이메일을 전송할 수 있도록 모듈을 제공한다.
