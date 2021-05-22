@@ -2896,6 +2896,63 @@ if __name__ == '__main__':
 + https://m.blog.naver.com/dsz08082/221890697862
 
 ---
+# 15. 이메일 보내기
+
+> <h3>학습 목표
+
++ 플라스크를 통해 이메일을 보낼 수 있는 기능을 만들어보자.
+
+## 1) 사전 작업
+
++ 플라스크는 기본적으로 이메일을 전송할 수 있도록 모듈을 제공한다.
++ 이메일 모듈을 사용해 플라스크의 이메일 송신 기능을 사용해보자.
+
+> <h3>라이브러리 설치
+
++ 이메일 기능 사용을 위해 라이브러리를 설치하자.
+
+```
+pip install flask-mail
+```
+
+## 2) GMAIL 이메일 메일 서버 설정
+
++ 먼저 GMAIL 계정과 IMAP, SMTP 설정이 필요하다.
++ IMAP : 수신 메일 서버, SMTP : 발신 메일 서버
++ 다음 사이트에서 IMAP 설정과 발신 메일 서버의 설정을 확인하자.
+
+=> https://support.google.com/mail/answer/7126229?hl=ko
+
+> <h3>IMAP 사용 설정
+
++ 위의 링크로 들어가면 아래와 같이 IMAP 사용을 설정하는 방법이 소개된다.
+
+![image](https://user-images.githubusercontent.com/43658658/119221663-580a7400-bb2b-11eb-9787-f241f150eb99.png)
+
++ 자신의 구글 계정으로 들어가 위의 안내사항을 따라가면 IMAP의 사용 여부를 설정하는 메뉴가 나온다.
+
+![image](https://user-images.githubusercontent.com/43658658/119221734-a15ac380-bb2b-11eb-9ec4-3c6d8c9c8aef.png)
+
+> <h3>SMTP와 기타 설정 변경
+
+![image](https://user-images.githubusercontent.com/43658658/119221810-1a5a1b00-bb2c-11eb-885b-0ebffd4e0a4b.png)
+
++ 위의 SMTP 서버 설정과 기타 설정에 따라 플라스크 서버 코드에서 메일 설정을 입력한다.
+
+``` python
+app = Flask(__name__)
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT']=465
+app.config['MAIL_USERNAME']=""  # 형식은 이메일@gmail.com
+app.config['MAIL_PASSWORD']=''  # 구글 계정 비밀번호 입력
+app.config['MAIL_USE_TLS']=False
+app.config['MAIL_USE_SSL']=True
+mail = Mail(app)  # 설정한 사항들을 메일 객체에 담는다.
+```
+
+## 3) 이메일 발신 코드 분석
+
+``` python
 
 
 
