@@ -51,6 +51,10 @@
 + [14. 계산기 페이지 만들기](#14-계산기-페이지-만들기)
 	+ [1) 파일 구성]
 	+ [2) 계산기 페이지 만들기](#2-계산기-페이지-만들기)
++ [15. 이메일 보내기](#15-이메일-보내기)
+	+ [1) 사전 작업]
+	+ [2) GMAIL 이메일 메일 서버 설정](#2-GMAIL-이메일-메일-서버-설정)
+	+ [3) 이메일 발신 코드 분석](#3-이메일-발신-코드-분석)
 
 ---
 # 1. Hello Flask
@@ -2950,12 +2954,232 @@ app.config['MAIL_USE_SSL']=True
 mail = Mail(app)  # 설정한 사항들을 메일 객체에 담는다.
 ```
 
++ 추가로 계정에 2차 비밀번호가 걸려있거나, 제시한 앱 설정에서 TLS 설정, 포트 설정 등 조금이라도 바뀌면 인증되지 않는다. 
++ 2차 비밀번호가 걸려있다면 해제는 다음 링크를 참고하자.
+
+=> https://support.google.com/accounts/answer/1064203?co=GENIE.Platform%3DDesktop&hl=ko
+
++ 다음과 같은 에러가 뜬다면 '보안 수준이 낮은 앱의 엑세스'를 '사용'으로 설정해주어야 한다.
+
+```
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. Learn more at\n5.7.8  https://support.google.com/mail/?p=BadCredentials j1sm7957128pfg.64 - gsmtp')
+```
+
++ 자신의 [구글 계정 관리]로 들어가서 [보안]으로 들어간 다음 [보안 수준이 낮은 앱의 엑세스]에서 '사용'으로 설정해주어야 한다.
+
+![image](https://user-images.githubusercontent.com/43658658/119223570-357d5880-bb35-11eb-96cb-148d68e8c426.png)
+
 ## 3) 이메일 발신 코드 분석
 
+> <h3>app.py
+
++ '/email' URL로 들어가면 이메일 발신 형식의 페이지가 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/119223629-76756d00-bb35-11eb-8271-2f1bcba07bfb.png)
+
++ 제목, 수신 이름, 이메일, 내용을 입력하고 보내기를 누르면 이메일이 보내졌다는 문구가 나타나고
+
+![image](https://user-images.githubusercontent.com/43658658/119223698-d2d88c80-bb35-11eb-82a8-1e808f40b4c8.png)
+
++ 아래와 같이 메일이 온 것을 알 수 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/119223718-edab0100-bb35-11eb-8e66-a22e1ac09f93.png)
+
 ``` python
+from flask import Flask, request, render_template
+from flask_mail import Mail, Message
+
+app = Flask(__name__)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = "*******@gmail.com"  # 자신의 이메일 입력
+app.config['MAIL_PASSWORD'] = '***********'  # 자신의 구글 계정 비밀번호 입력
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)  # 설정한 사항들을 메일 객체에 담는다.
 
 
+def send_email(title, senders, receiver, content):
+    msg = Message(title, sender=senders, recipients=receiver)
+    msg.body = content
+    mail.send(msg)
 
+
+@app.route('/email', methods=['post', 'get'])
+def email_test():
+    if request.method == 'POST':
+        title = request.form['email_title']
+        senders = request.form['email_sender']
+        receiver = request.form['email_receiver']
+        content = request.form['email_content']
+        receiver = receiver.split(',')
+
+        for i in range(len(receiver)):
+            receiver[i] = receiver[i].strip()
+
+        print(receiver)
+
+        result = send_email(title, senders, receiver, content)
+
+        if not result:
+            return render_template('email.html', content="Email is sent")
+        else:
+            return render_template('email.html', content="Email is not sent")
+
+    else:
+        return render_template('email.html')
+
+
+if __name__ == "__main__":
+    app.secret_key = "123123123"
+    app.run(debug=True)
+```
+
+``` python
+def send_email(title, senders, receiver, content):
+    msg = Message(title, sender=senders, recipients=receiver)
+    msg.body = content
+    mail.send(msg)
+```
+
++ send_email이라는 함수를 만들어준다.
++ Message(제목, 받는 사람 이름, 받는 이메일) 형식으로 Message 플라스크 함수가 쓰여질 수 있다.
+	+ body에는 내용이 들어간다.
++ mail.send(msg) : 제목, 받는 사람 이름, 받는 이메일, 내용이 담긴 정보들을 이용해 메일이 보내지도록 한다.
+
+``` python
+@app.route('/email', methods=['post', 'get'])
+def email_test():
+    if request.method == 'POST':
+        title = request.form['email_title']
+        senders = request.form['email_sender']
+        receiver = request.form['email_receiver']
+        content = request.form['email_content']
+        receiver = receiver.split(',')
+
+        for i in range(len(receiver)):
+            receiver[i] = receiver[i].strip()
+
+        print(receiver)
+
+        result = send_email(title, senders, receiver, content)
+
+        if not result:
+            return render_template('email.html', content="Email is sent")
+        else:
+            return render_template('email.html', content="Email is not sent")
+
+    else:
+        return render_template('email.html')
+```
+
++ POST 메서드 형식으로 오면, request 폼으로 온 제목, 받는 사람 이름, 받는 이메일, 내용을 send_email 함수에 넣어서 보낸다.
++ 그리고, 이메일이 정상적으로 보내졌다면, result에는 아무런 값이 없으므로 메일이 보내졌다는 문구를 띄운다.
++ URL을 직접 쳐서 GET 메서드 형식으로 페이지에 들어가면 그냥 email.html 페이지를 띄우도록 한다.
+
+> <h3>email.html
+
++ email.html 페이지는 아래와 같다.
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='file.css') }}">
+</head>
+<body>
+    <div id="message">
+        <div id="subject">
+            <h1>Email System</h1>
+        </div>
+        <h1>{{ content }}</h1>
+        <form action="/email" id="email-form" method=post>
+            <label class="legend">제목</label>
+            <input type="text" name="email_title" value=""/>
+
+            <label class="legend">수신 이름</label>
+            <input type="text" name="email_sender" value=""/>
+
+            <label class="legend">보낼 이메일 주소</label>
+            <input type="text" name="email_receiver" value=""/>
+
+            <label class="legend">내용</label>
+            <textarea type="text" name="email_content" value="" cols="50" rows="10"></textarea>
+            <input type="submit" value="보내기"/>
+        </form>
+    </div>
+</body>
+</html>
+```
+
+> <h3>file.css
+
++ 정보가 입력될 박스와 label, input, submit의 서식을 설정한다.
++ textarea : text를 입력할 수 있는데 input과의 차이점은 우측 하단의 길이 조절 기능을 이용해 길이를 조절할 수 있다는 것이다.
+
+``` css
+#email-form{
+    width:400px;
+    height:auto;
+    border:2px solid gray;
+    border-radius:5px;
+    margin:30px 130px;
+}
+
+#email-form input, #email-form label, #email-form textarea{
+    display:block;
+}
+
+#email-form input{
+    margin-top:5px;
+    margin-left:5px;
+}
+
+#email-form label{
+    margin-top:5px;
+}
+
+#email-form textarea{
+    margin-top:5px;
+    margin-left:5px;
+}
+
+#email-form input[type='submit']{
+    margin:5px auto;
+}
+
+#message{
+    width:700px;
+    height:700px;
+    border:2px solid gray;
+    border-radius:5px;
+    margin:30px 120px;
+}
+```
+
+> <h3> 동작 확인
+
++ '/email' URL로 들어가면 이메일 발신 형식의 페이지가 나타난다.
+
+![image](https://user-images.githubusercontent.com/43658658/119223629-76756d00-bb35-11eb-8271-2f1bcba07bfb.png)
+
++ 제목, 수신 이름, 이메일, 내용을 입력하고 보내기를 누르면 이메일이 보내졌다는 문구가 나타나고
+
+![image](https://user-images.githubusercontent.com/43658658/119223698-d2d88c80-bb35-11eb-82a8-1e808f40b4c8.png)
+
++ 아래와 같이 메일이 온 것을 알 수 있다.
+
+![image](https://user-images.githubusercontent.com/43658658/119223718-edab0100-bb35-11eb-8e66-a22e1ac09f93.png)
+
+[목차](#Learning-Flask)
+
+---
+[출처]
++ https://m.blog.naver.com/dsz08082/221891269533
+
+---
 
 
 
