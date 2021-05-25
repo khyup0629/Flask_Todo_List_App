@@ -188,3 +188,387 @@ pip install pymongo
 
 + 파이썬 IDE의 터미널을 통해 파이썬에서 사용할 수 있는 mongoDB 모듈인 pymongo를 설치해준다.
 
+## DB연결 - MongoClient
+
++ MongoDB에 연결하는 방법은 두 가지가 있다.
+	+ 첫 번째 방법은 실행 중인 MongoDB 서버의 URI를 MongoClient의 파라미터로 입력하는 것이고,
+	+ 두 번째 방법은 DB 서버의 IP와 포트 번호 두 가지 값을 각각 파라미터로 입력하는 것이다. 
+
+``` python
+from pymongo import MongoClient
+
+# 방법1 - URI
+# mongodb_URI = "mongodb://localhost:27017/"
+# client = MongoClient(mongodb_URI)
+
+# 방법2 - IP, PORT
+client = MongoClient('localhost', 27017)
+
+print(client.list_database_names())
+```
+
+[출력]
+
+``` python
+['admin', 'config', 'local']
+```
+
+## DB 접근
+
++ DB에 접근하는 방법도 두 가지가 있다.
+	+ 하나는 메서드 형태로 . 뒤에 db명을 입력하는 것이고,
+	+ 다른 하나는 str 형식으로 대괄호 안에 db명을 입력하는 것이다.
+
+``` python
+# DB 접근
+# 방법1
+# db = client.mydb
+
+# 방법2
+db = client['mydb']
+```
+
+## Collection 접근
+
++ Collection 접근 방법도 DB 접근 방법과 유사하다.
+
+``` python
+# Collection 접근
+# 방법1
+# collection = db.myCol
+# 방법2
+collection = db['myCol']
+```
+
+## Documents
+
+> <h3>Document 생성
+
++ MongoDB는 Data를 JSON 스타일의 Document로 저장한다.
++ JSON과 유사한 Python Dictionary 데이터를 MongoDB Collection에 Document로 저장할 수 있다.
+
+``` python
+import datetime
+post = {"author": "Mike",
+        "text": "My first blog post!",
+        "tags": ["mongodb", "python", "pymongo"],
+        "date": datetime.datetime.utcnow()
+        }
+print(post)
+```
+
+[출력]
+
+``` python
+{'author': 'Mike',
+ 'text': 'My first blog post!',
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217943)}
+```
+
+> <h3>Collection 접근 및 Document 추가
+
++ posts라는 Collection에 접근하여 위에서 만든 Dictionary 데이터를 추가한다. 이 때, 데이터 추가 후 자동으로 생성되는 _id 값을 post_id에 저장한다.
+
+``` python
+# Collection 접근 - 'posts' Collection
+posts = db.posts
+
+# Document 추가 - insert_one() 메서드 이용
+post_id = posts.insert_one(post).inserted_id
+print(post_id)
+```
+
+[출력]
+
+``` python
+5fa2a1d5a7bd62cd633fdb5b
+```
+
+``` python
+# Collection 리스트 조회
+db.list_collection_names()
+```
+
+[출력]
+
+```
+['posts']
+```
+
+> <h3> 단일 Document 조회 - find_one() 메서드 이용
+
+``` python
+# Collection 내 단일 Document 조회
+import pprint
+pprint.pprint(posts.find_one())
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+```
+
+``` python
+# 쿼리를 통한 Documents 조회
+pprint.pprint(posts.find_one({"author": "Mike"}))
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+```
+
+``` python
+# _id를 통한 Documents 조회 - _id는 binary json 타입으로 조회해야 함
+pprint.pprint(posts.find_one({"_id": post_id}))
+print(type(post_id))
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+<class 'bson.objectid.ObjectId'>
+```
+
+``` python
+# _id 값이 str인 경우 조회 안 됨.
+post_id_as_str = str(post_id)
+pprint.pprint(posts.find_one({"_id": post_id_as_str}))
+```
+
+[출력]
+
+```
+None
+```
+
+``` python
+# _id 값이 str인 경우 bson(binary json) 변환 후 조회
+from bson.objectid import ObjectId
+
+bson_id = ObjectId(post_id_as_str)
+pprint.pprint(posts.find_one({"_id": bson_id}))
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+```
+
+> <h3>여러 Documents 추가 - insert_many() 메서드 이용
+
+``` python
+# Bulk Insert
+
+new_posts = [
+    
+    {
+     "author": "Mike",
+     "text": "Another post!",
+     "tags": ["bulk", "insert"],
+     "date": datetime.datetime(2009, 11, 12, 11, 14)
+    },
+     
+    {
+     "author": "Eliot",
+     "title": "MongoDB is fun",
+     "text": "and pretty easy too!",
+     "date": datetime.datetime(2009, 11, 10, 10, 45)
+    }
+    
+]
+
+result = posts.insert_many(new_posts)
+result.inserted_ids
+```
+
+[출력]
+
+```
+[ObjectId('5fa2a1eda7bd62cd633fdb5c'), ObjectId('5fa2a1eda7bd62cd633fdb5d')]
+```
+
+> <h3>여러 Documents 조회 - find() 메서드 이용
+
+``` python
+# Collection 내 모든 Documents 조회
+for post in posts.find():
+    pprint.pprint(post)
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+{'_id': ObjectId('5fa2a1eda7bd62cd633fdb5c'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2009, 11, 12, 11, 14),
+ 'tags': ['bulk', 'insert'],
+ 'text': 'Another post!'}
+{'_id': ObjectId('5fa2a1eda7bd62cd633fdb5d'),
+ 'author': 'Eliot',
+ 'date': datetime.datetime(2009, 11, 10, 10, 45),
+ 'text': 'and pretty easy too!',
+ 'title': 'MongoDB is fun'}
+```
+
+``` python
+# 쿼리를 통한 Documents 조회
+for post in posts.find({"author": "Mike"}):
+    pprint.pprint(post)
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1d5a7bd62cd633fdb5b'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2020, 11, 4, 12, 42, 56, 217000),
+ 'tags': ['mongodb', 'python', 'pymongo'],
+ 'text': 'My first blog post!'}
+{'_id': ObjectId('5fa2a1eda7bd62cd633fdb5c'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2009, 11, 12, 11, 14),
+ 'tags': ['bulk', 'insert'],
+ 'text': 'Another post!'}
+```
+
+> <h3>카운팅
+
+``` python
+# 컬렉션 내 Document 수 조회
+posts.count_documents({})
+```
+
+[출력]
+
+```
+3
+```
+
+``` python
+# 쿼리를 통한 Document 수 조회
+posts.count_documents({"author": "Mike"})
+```
+
+[출력]
+
+```
+2
+```
+
+> <h3>범위 쿼리
+
+``` python
+# 범위 쿼리
+d = datetime.datetime(2009, 11, 12, 12)
+for post in posts.find({"date": {"$lt": d}}).sort("author"):
+    pprint.pprint(post)
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1eda7bd62cd633fdb5d'),
+ 'author': 'Eliot',
+ 'date': datetime.datetime(2009, 11, 10, 10, 45),
+ 'text': 'and pretty easy too!',
+ 'title': 'MongoDB is fun'}
+{'_id': ObjectId('5fa2a1eda7bd62cd633fdb5c'),
+ 'author': 'Mike',
+ 'date': datetime.datetime(2009, 11, 12, 11, 14),
+ 'tags': ['bulk', 'insert'],
+ 'text': 'Another post!'}
+```
+
+> <h3>인덱싱
+
+``` python
+import pymongo
+# Indexing
+result = db.profiles.create_index([('user_id', pymongo.ASCENDING)], unique=True)
+
+# 두 개의 인덱스 확인
+sorted(list(db.profiles.index_information()))
+```
+
+[출력]
+
+```
+['_id_', 'user_id_1']
+```
+
+``` python
+# 유저 정보 관련 Document 생성
+user_profiles = [
+    
+    {"user_id": 211, "name": "Luke"},
+    {"user_id": 212, "name": "Ziltoid"}
+    
+]
+
+# Document 추가
+result = db.profiles.insert_many(user_profiles)
+
+# 이미 컬렉션에 있는 user_id이면 추가 바지
+new_profile = {"user_id": 213, "name": "Drew"}
+duplicate_profile = {"user_id": 212, "name": "Tommy"}
+
+# user_id 신규 이므로 정상 추가 됨
+result = db.profiles.insert_one(new_profile)
+
+try:
+    # user_id 기존에 있으므로 추가 안 됨
+    result = db.profiles.insert_one(duplicate_profile)
+except:
+    print("Error")
+```
+
+[출력]
+
+```
+Error
+```
+
+``` python
+for doc in db.profiles.find():
+    pprint.pprint(doc)
+```
+
+[출력]
+
+```
+{'_id': ObjectId('5fa2a1f4a7bd62cd633fdb5e'), 'name': 'Luke', 'user_id': 211}
+{'_id': ObjectId('5fa2a1f4a7bd62cd633fdb5f'), 'name': 'Ziltoid', 'user_id': 212}
+{'_id': ObjectId('5fa2a1f5a7bd62cd633fdb60'), 'name': 'Drew', 'user_id': 213}
+```
+---
+[출처]
++ https://wooiljeong.github.io/python/mongodb-01/
+
+---
