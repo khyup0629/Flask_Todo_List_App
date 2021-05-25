@@ -270,8 +270,9 @@ print(post)
 
 + posts라는 Collection에 접근하여 위에서 만든 Dictionary 데이터를 추가한다. 이 때, 데이터 추가 후 자동으로 생성되는 _id 값을 post_id에 저장한다.
 
+> Collection 접근 - 'posts' Collection
+
 ``` python
-# Collection 접근 - 'posts' Collection
 posts = db.posts
 
 # Document 추가 - insert_one() 메서드 이용
@@ -285,8 +286,9 @@ print(post_id)
 5fa2a1d5a7bd62cd633fdb5b
 ```
 
+> Collection 리스트 조회
+
 ``` python
-# Collection 리스트 조회
 db.list_collection_names()
 ```
 
