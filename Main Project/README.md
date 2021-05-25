@@ -85,7 +85,6 @@ SubmitField：제출 필드
 ```
 
 + flask_wtf는 wtforms.validators 모듈을 이용해 선택적 필드 유효성 검사를 진행한다.
-+ 양식을 제출하기 위한 유효성 검사 순서를 왼쪽에서 오른쪽 순서로 지정할 수 있다.
 
 ``` python
 __all__ = (
