@@ -1,5 +1,5 @@
 + [html 용어 정리](#html-용어-정리)
-+ [flask_wtf](#flask-wtf)
++ [flask_wtf](#flask_wtf)
 
 # html 용어 정리
 
@@ -58,7 +58,7 @@ pip install Flask-WTF
 	+ core : 일반적으로 사용 되는 필드를 정의.
 	+ simple : core 모듈을 기반으로 일부 필드를 확장. 
 
-```
+``` python
 # core.py
 __all__ = (
     'BooleanField', 'DecimalField', 'DateField', 'DateTimeField', 'FieldList',
@@ -87,7 +87,7 @@ SubmitField：제출 필드
 + flask_wtf는 wtforms.validators 모듈을 이용해 선택적 필드 유효성 검사를 진행한다.
 + 양식을 제출하기 위한 유효성 검사 순서를 왼쪽에서 오른쪽 순서로 지정할 수 있다.
 
-```
+``` python
 __all__ = (
     'DataRequired', 'data_required', 'Email', 'email', 'EqualTo', 'equal_to',
     'IPAddress', 'ip_address', 'InputRequired', 'input_required', 'Length',
