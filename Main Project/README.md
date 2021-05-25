@@ -176,9 +176,15 @@ WTF_CSRF_ENABLED = False
 
 ## 설치
 
++ 아래의 링크로 들어가 MongoDB의 가장 최신 버전을 windows, msi 버전으로 다운 받는다.
+
+=> https://www.mongodb.com/try/download/community
+
++ 그냥 pymongo만 다운 받게 되면 서버가 mongoDB에 접근하지 못해 [win 10061] 에러가 발생하게 된다.
+
 ```
 pip install pymongo
 ```
 
-+ 파이썬에서 사용할 수 있는 mongoDB 모듈인 pymongo를 설치해준다.
++ 파이썬 IDE의 터미널을 통해 파이썬에서 사용할 수 있는 mongoDB 모듈인 pymongo를 설치해준다.
 
