@@ -270,7 +270,7 @@ print(post)
 
 + posts라는 Collection에 접근하여 위에서 만든 Dictionary 데이터를 추가한다. 이 때, 데이터 추가 후 자동으로 생성되는 _id 값을 post_id에 저장한다.
 
-> Collection 접근 - 'posts' Collection
+[Collection 접근 - 'posts' Collection]
 
 ``` python
 posts = db.posts
@@ -286,7 +286,7 @@ print(post_id)
 5fa2a1d5a7bd62cd633fdb5b
 ```
 
-> Collection 리스트 조회
+[Collection 리스트 조회]
 
 ``` python
 db.list_collection_names()
@@ -300,8 +300,9 @@ db.list_collection_names()
 
 > <h3> 단일 Document 조회 - find_one() 메서드 이용
 
+[Collection 내 단일 Document 조회]
+
 ``` python
-# Collection 내 단일 Document 조회
 import pprint
 pprint.pprint(posts.find_one())
 ```
@@ -316,8 +317,9 @@ pprint.pprint(posts.find_one())
  'text': 'My first blog post!'}
 ```
 
+[쿼리를 통한 Documents 조회]
+
 ``` python
-# 쿼리를 통한 Documents 조회
 pprint.pprint(posts.find_one({"author": "Mike"}))
 ```
 
@@ -330,6 +332,8 @@ pprint.pprint(posts.find_one({"author": "Mike"}))
  'tags': ['mongodb', 'python', 'pymongo'],
  'text': 'My first blog post!'}
 ```
+
+[_id를 통한 Documents 조회 - _id는 binary json 타입으로 조회해야 함]
 
 ``` python
 # _id를 통한 Documents 조회 - _id는 binary json 타입으로 조회해야 함
@@ -348,6 +352,8 @@ print(type(post_id))
 <class 'bson.objectid.ObjectId'>
 ```
 
+[_id 값이 str인 경우 조회 안 됨.]
+
 ``` python
 # _id 값이 str인 경우 조회 안 됨.
 post_id_as_str = str(post_id)
@@ -359,6 +365,8 @@ pprint.pprint(posts.find_one({"_id": post_id_as_str}))
 ```
 None
 ```
+
+[_id 값이 str인 경우 bson(binary json) 변환 후 조회]
 
 ``` python
 # _id 값이 str인 경우 bson(binary json) 변환 후 조회
@@ -413,6 +421,8 @@ result.inserted_ids
 
 > <h3>여러 Documents 조회 - find() 메서드 이용
 
+[Collection 내 모든 Documents 조회]
+
 ``` python
 # Collection 내 모든 Documents 조회
 for post in posts.find():
@@ -439,6 +449,8 @@ for post in posts.find():
  'title': 'MongoDB is fun'}
 ```
 
+[쿼리를 통한 Documents 조회]
+
 ``` python
 # 쿼리를 통한 Documents 조회
 for post in posts.find({"author": "Mike"}):
@@ -462,6 +474,8 @@ for post in posts.find({"author": "Mike"}):
 
 > <h3>카운팅
 
+[Collection 내 Document 수 조회]
+
 ``` python
 # 컬렉션 내 Document 수 조회
 posts.count_documents({})
@@ -472,6 +486,8 @@ posts.count_documents({})
 ```
 3
 ```
+
+[쿼리를 통한 Document 수 조회]
 
 ``` python
 # 쿼리를 통한 Document 수 조회
@@ -485,6 +501,8 @@ posts.count_documents({"author": "Mike"})
 ```
 
 > <h3>범위 쿼리
+
+[범위 쿼리]
 
 ``` python
 # 범위 쿼리
@@ -510,6 +528,8 @@ for post in posts.find({"date": {"$lt": d}}).sort("author"):
 
 > <h3>인덱싱
 
+[두 개의 인덱스 확인]
+
 ``` python
 import pymongo
 # Indexing
@@ -525,6 +545,8 @@ sorted(list(db.profiles.index_information()))
 ['_id_', 'user_id_1']
 ```
 
+[이미 Collection에 있는 user_id인지]
+
 ``` python
 # 유저 정보 관련 Document 생성
 user_profiles = [
@@ -537,7 +559,7 @@ user_profiles = [
 # Document 추가
 result = db.profiles.insert_many(user_profiles)
 
-# 이미 컬렉션에 있는 user_id이면 추가 바지
+# 이미 컬렉션에 있는 user_id이면 추가 안 됨
 new_profile = {"user_id": 213, "name": "Drew"}
 duplicate_profile = {"user_id": 212, "name": "Tommy"}
 
@@ -556,6 +578,8 @@ except:
 ```
 Error
 ```
+
+[Collection 내의 Document 모두 출력]
 
 ``` python
 for doc in db.profiles.find():
