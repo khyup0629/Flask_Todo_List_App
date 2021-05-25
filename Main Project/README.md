@@ -268,7 +268,9 @@ print(post)
 
 > <h3>Collection 접근 및 Document 추가
 
-+ posts라는 Collection에 접근하여 위에서 만든 Dictionary 데이터를 추가한다. 이 때, 데이터 추가 후 자동으로 생성되는 _id 값을 post_id에 저장한다.
++ posts라는 Collection에 접근하여 위에서 만든 Dictionary 데이터를 추가한다. 
++ 이 때, 데이터 추가 후 자동으로 생성되는 _id 값을 post_id에 저장한다.
++ (document에는 별도로 지정해주지 않아도 생성하면 고유 _id가 문자열 형태로 생성된다.)
 
 [Collection 접근 - 'posts' Collection]
 
@@ -593,6 +595,25 @@ for doc in db.profiles.find():
 {'_id': ObjectId('5fa2a1f4a7bd62cd633fdb5f'), 'name': 'Ziltoid', 'user_id': 212}
 {'_id': ObjectId('5fa2a1f5a7bd62cd633fdb60'), 'name': 'Drew', 'user_id': 213}
 ```
+
+> <h3>Document의 value 변경 - update_one() 메서드, bson 모듈의 ObjectId() 이용
+	
++ Document 를 생성하면 자동으로 고유 _id가 같이 생성된다.
++ {"_id":문자열} 형태로 Document 의 원소로 들어간다.
++ ObjectId()를 통해 문자열 value를 읽을 수 있으므로 _id 값을 읽을 수 있다.
+
++ **collection.update_one({"_id": ObjectId(_id)}, {"$set": {"key": "value"}})**
+
+``` python
+# _id가 _id인 Document 를 task 에 넣는다.
+task = todos.find({"_id": ObjectId(_id)})
+# task = [{    }] 형태이다.
+if task[0]["done"] == "yes":  # {done: yes}일 경우 {done: no}로 value를 변경한다.
+	todos.update_one({"_id": ObjectId(id)}, {"$set": {"done": "no"}})
+else:  # {done: no}일 경우 {done: yes}로 value를 변경한다.
+	todos.update_one({"_id": ObjectId(id)}, {"$set": {"done": "yes"}})
+```
+
 ---
 [출처]
 + https://wooiljeong.github.io/python/mongodb-01/
