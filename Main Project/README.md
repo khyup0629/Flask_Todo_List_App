@@ -1,5 +1,6 @@
 + [html 용어 정리](#html-용어-정리)
 + [flask_wtf](#flask_wtf)
++ [MongoDB](#MongoDB)
 
 # html 용어 정리
 
@@ -171,3 +172,13 @@ WTF_CSRF_ENABLED = False
 + https://velog.io/@insutance/FlaskWTF
 
 ---
+# MongoDB
+
+## 설치
+
+```
+pip install pymongo
+```
+
++ 파이썬에서 사용할 수 있는 mongoDB 모듈인 pymongo를 설치해준다.
+
