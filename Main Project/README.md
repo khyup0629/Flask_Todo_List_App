@@ -614,6 +614,15 @@ else:  # {done: no}일 경우 {done: yes}로 value를 변경한다.
 	todos.update_one({"_id": ObjectId(id)}, {"$set": {"done": "yes"}})
 ```
 
+> <h3>Document의 key:value 삭제 - delete_one() 메서드, bson 모듈의 ObjectId() 이용
+
++ Document의 고유 id를 이용해 원소를 삭제할 수 있다.
+
+``` python
+id = request.values.get("_id")
+todos.delete_one({"_id": ObjectId(id)})
+```
+
 ---
 [출처]
 + https://wooiljeong.github.io/python/mongodb-01/
