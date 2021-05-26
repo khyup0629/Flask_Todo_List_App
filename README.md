@@ -33,8 +33,8 @@
 + 날짜별 해야 할 일 보기
 + 중요도 순 정렬
 + 페이지 나누기
-
-[위로](#Flask-Todo-List-App-Project)
+---
+[처음으로](#Flask-Todo-List-App-Project)
 
 참조
 - https://github.com/neltia/Flask-Todo-app
