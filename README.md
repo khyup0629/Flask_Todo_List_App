@@ -15,7 +15,9 @@
 > 첫 번째 개인 토이 프로젝트로 적당한 난이도라 판단했다. 난이도가 높지 않은 웹 어플리케이션을 스스로 개발해봄으로써 프론트엔드와 백엔드 사이의 상호 작용에 관하여 공부해보고 싶었고, DB를 활용해보면서 어떤 메커니즘으로 작용하는지 알고 싶었다. 또한 Todo List는 앞으로 나의 개발 공부에 자기개발 도구로서 활용해볼 수 있을 것 같다는 점에서 매력적으로 다가왔다.
 ---
 ## 앱 화면 구성
-![image](https://user-images.githubusercontent.com/43658658/119606099-e2551f80-be2c-11eb-8ece-86e7e4cfd991.png)
+![image](https://user-images.githubusercontent.com/43658658/119606295-4a0b6a80-be2d-11eb-88f7-6e0ff1191177.png)
+
+![image](https://user-images.githubusercontent.com/43658658/119606318-57c0f000-be2d-11eb-8331-6d67ba5abc85.png)
 
 ---
 ## 앱 기능 설명
