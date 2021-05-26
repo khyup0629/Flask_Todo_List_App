@@ -1,44 +1,67 @@
-+ [html 용어 정리](#html-용어-정리)
+# Main Project 이론 정리
+
++ [html 태그 정리](#html-태그-정리)
 + [flask_wtf](#flask_wtf)
 + [MongoDB](#MongoDB)
 
-# html 용어 정리
+# html 태그 정리
 
 > <h3>base.html
 
-meta name="viewport" content="width=device-width, initial-scale=1.0"
-i
-div
-% extends %
-% include %
-% block content %
-% endblock %
++ meta name="viewport" content="width=device-width, initial-scale=1.0" : 웹 프레임의 크기에 맞춰서 페이지의 크기가 변경되도록 하는 기능
++ i class : 아이콘 삽입, **Bootstrap 기능**
+	+ 일반적으로 HTML에서는 이태릭체나 다른 텍스트 서식으로 변경하기 위해 사용한다.
++ div : Division의 약자로, 레이아웃을 나누는데 주로 쓰인다.
+	+ 가상의 레이아웃을 설계하는데 쓰이며, 주로 CSS와 연동하여 쓰인다.
++ block content, endblock : 'base.html'에서 다른 html 문서의 내용이 들어갈 부분에 block content~endblock을 써준 뒤 다른 html 문서의 상단에 extends "base.html"을 통해 확장하고, block content와 endblock 사이에 들어갈 내용을 입력해준다. 
++ extends "base.html" : 다른 html 문서에서 작성한 내용이 base.html 문서에 포함된다. 부모 템플릿을 불러온다고 이해.
++ include "nav.html" : nav.html 문서가 현재 html 문서에 포함된다. 자식 템플릿을 불러온다고 이해. 
 
 > <h3>nav.html
 
-button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar"
-span class="navbar-toggler-icon"
++ button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar" : data-target의 내용을 숨기는 버튼을 생성한다.
+	+ data-toggle="collapse" : 내용을 숨기는 기능, **Bootstrap 기능**
++ span : div와 비슷하게 CSS와 함께 쓰인다. div 태그와 차이점은 block으로 나누는 것이 아닌 inline으로 나눈다는 것이다. 즉, div는 줄 바꿈이 되지만, span은 줄 바꿈이 안된다. 
 
-nav
-a
-ul, li
++ nav : 다른 페이지 또는 현재 페이지의 다른 부분과 연결되는 네비게이션 링크(navigation links)들의 집합을 정의할 때 사용한다.
+	+ 일반적인 예로는 메뉴, 목차, 인덱스 등이 있다.
++ a : 문자열에 링크(href)를 걸 수 있다.
++ li : ol 또는 ul 속에 속해서 리스트를 열거할 때 사용한다.
+	+ ol : 순서가 있는 리스트
+	+ ul : 순서가 없는 리스트
 
 > <h3>footer.html
 
-footer
++ footer : 문서나 특정 섹션(section)의 푸터(footer)를 정의할 때 사용한다.
++ 푸터(footer)는 보통 footer 요소가 포함되어 있는 문서나 섹션에 대한 아래와 같은 정보를 포함합니다.
+	- 저자(author) 정보
+	- 저작권 정보
+	- 연락처
+	- 사이트맵(sitemap)
+	- 페이지 맨 위로 되돌아갈 수 있는 Top 버튼
+	- 연관 페이지 등
 
 > <h3>index.html
 
-select, option
++ select, option : 옵션 메뉴를 제공하는 드롭다운 리스트(drop-down list)를 정의할 때 사용.
+	+ 내부의 option 요소는 드롭다운 리스트(drop-down list)에서 사용되는 각각의 옵션을 정의한다.
+	+ 이러한 select 요소는 사용자로부터 입력을 받기 위한 폼(form)에 사용될 수 있습니다.
 
 > <h3>list.html
 
-tr
-class
-thead : table의 head 부분
-tbody : table의 body 부분
-td
-th
++ table : 데이터를 포함하는 셀(cell)들의 행과 열로 구성된 2차원 테이블을 정의할 때 사용한다.
+	+ tr : 테이블의 각 행(row)
+	+ thead : table의 head(열의 최상단) 부분
+		+ th : 각 열의 제목
+	+ tbody : table의 body(열의 최상단을 제외한 나머지) 부분
+		+ td : 하나의 테이블 셀(cell)
+
++ 알림창(modal)
+	+ div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+	+ tabindex="-1" : 해당 작업이 끝나기 전까지 모든 link들의 기능을 비활성화한다.
+	+ modal 관련 정보(Bootstrap에서 사용하는 형식)
+
+	=> https://getbootstrap.com/docs/4.0/components/modal/#accessibility
 
 # flask_wtf
 
@@ -625,6 +648,8 @@ todos.delete_one({"_id": ObjectId(id)})
 
 ---
 [출처]
++ https://getbootstrap.com/
++ http://tcpschool.com/
 + https://wooiljeong.github.io/python/mongodb-01/
 
 ---
