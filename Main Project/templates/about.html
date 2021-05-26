@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<body class="text-center">
+    <div class="card shadow-sm mx-2 mt-2">
+        <div class="card-header font-weight-bold">
+            Home
+        </div>
+
+        <div class="card-body">
+            <div class="card-text">
+                <br>
+                <!-- 이미지를 창 크기에 맞게 맞춰주는 메서드 class="img-fluid"-->
+                <img class="img-fluid" src="{{ url_for('static', filename='images/notes.png') }}">
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
