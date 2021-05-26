@@ -36,6 +36,4 @@
 ---
 [처음으로](#Flask-Todo-List-App-Project)
 
-참조
-- https://github.com/neltia/Flask-Todo-app
 ---
