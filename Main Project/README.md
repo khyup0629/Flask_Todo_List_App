@@ -647,9 +647,10 @@ todos.delete_one({"_id": ObjectId(id)})
 ```
 
 ---
-[출처]
+[참조]
 + https://getbootstrap.com/ (Bootstrap 활용법에 대한 정보)
 + http://tcpschool.com/ (HTML 태그 관련 정보)
 + https://wooiljeong.github.io/python/mongodb-01/
++ https://github.com/neltia/Flask-Todo-app
 
 ---
